@@ -1,0 +1,9 @@
+{
+  "remoteURL": "https://github.com/Alex-mcom/dev-wiki",
+  "gitLocation": "",
+  "syncinterval": 0,
+  "isSyncOnLoad": true,
+  "checkStatusOnLoad": true,
+  "noticeLevel": "ALL",
+  "showSyncSuccessNotice": true
+}
