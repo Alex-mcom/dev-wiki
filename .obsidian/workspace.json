@@ -36,7 +36,8 @@
               "title": "Сборка программы"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       },
       {
         "id": "d303775a0479071b",
@@ -49,7 +50,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/make.md",
+                "file": "C/Сборка программы.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -208,15 +209,18 @@
       "daily-notes:Сегодняшняя заметка": false,
       "templates:Вставить шаблон": false,
       "command-palette:Открыть палитру команд": false,
-      "bases:Создать новую базу": false
+      "bases:Создать новую базу": false,
+      "templater-obsidian:Templater": false,
+      "github-sync:Sync with Remote": false
     }
   },
-  "active": "95b1d57feed7bdbc",
+  "active": "0059cee2d3d050c1",
   "lastOpenFiles": [
+    "C/Управление памятью.md",
+    "C/make.md",
     "dev-wiki",
     "Новая папка",
     "C/Сборка программы.md",
-    "C/make.md",
     "C++/_templates/format_as_code.md",
     "C/stdio.h.md",
     "VPS.md",
@@ -244,7 +248,6 @@
     "C++/Пространства имён.md",
     "C/Указатели.md",
     "C++/_templates/char_to_lower.md",
-    "C/Управление памятью.md",
     "C++/_templates",
     "C++",
     "C/imgs/Pasted image 20260926174410.png",
@@ -258,7 +261,6 @@
     "Без названия.base",
     "C/imgs",
     "C",
-    "VPN разработка/Настройка сервера/Данные для входа",
-    "VPN разработка/Настройка сервера"
+    "VPN разработка/Настройка сервера/Данные для входа"
   ]
 }
