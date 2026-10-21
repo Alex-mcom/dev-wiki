@@ -1,5 +1,5 @@
 {
-  "remoteURL": "https://github.com/Alex-mcom/dev-wiki",
+  "remoteURL": "git@github.com:Alex-mcom/dev-wiki.git",
   "gitLocation": "",
   "syncinterval": 10,
   "isSyncOnLoad": true,
