@@ -36,8 +36,7 @@
               "title": "Сборка программы"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       },
       {
         "id": "d303775a0479071b",
@@ -50,13 +49,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/Сборка программы.md",
+                "file": "C/make.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Структура"
+              "title": "Outline"
             }
           }
         ]
@@ -84,7 +83,7 @@
                 "searchQuery": ""
               },
               "icon": "lucide-folder-closed",
-              "title": "Файловый менеджер"
+              "title": "Files"
             }
           },
           {
@@ -203,24 +202,24 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:Меню быстрого перехода": false,
-      "graph:Граф": false,
-      "canvas:Создать новый холст": false,
-      "daily-notes:Сегодняшняя заметка": false,
-      "templates:Вставить шаблон": false,
-      "command-palette:Открыть палитру команд": false,
-      "bases:Создать новую базу": false,
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false,
       "templater-obsidian:Templater": false,
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "0059cee2d3d050c1",
+  "active": "95b1d57feed7bdbc",
   "lastOpenFiles": [
+    "C/Сборка программы.md",
     "C/Управление памятью.md",
     "C/make.md",
     "dev-wiki",
     "Новая папка",
-    "C/Сборка программы.md",
     "C++/_templates/format_as_code.md",
     "C/stdio.h.md",
     "VPS.md",
