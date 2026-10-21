@@ -1,0 +1,71 @@
+/*
+
+This CSS file will be included with your plugin, and
+available in the app when your plugin is enabled.
+
+If your plugin does not need CSS, delete this file.
+
+*/
+
+.blockid-modal-desc {
+  font-size: var(--font-ui-smaller);
+  color: var(--text-muted);
+  margin-top: 0.5em;
+  margin-bottom: 0.2em;
+}
+
+.blockid-modal-error {
+  color: var(--text-error);
+  font-size: var(--font-ui-smaller);
+  margin-top: 0.25em;
+}
+
+.blockid-modal-input {
+  width: 100%;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+/* 设置描述里的 info 提示图标：常驻但低调，hover 时轻微提亮 */
+.easy-copy-info-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 12px;
+  height: 12px;
+  margin-left: 3px;
+  color: var(--text-faint);
+  vertical-align: -0.125em;
+  cursor: help;
+  transition: color 150ms ease;
+}
+
+.easy-copy-info-icon:hover {
+  color: var(--text-muted);
+}
+
+.easy-copy-info-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* 自定义规则弹窗里的正则校验错误提示 */
+.easy-copy-regex-error {
+  color: var(--text-error);
+  font-size: var(--font-ui-smaller);
+  min-height: 1em;
+  margin: 0.25em 0 0.5em 0;
+}
+
+/* 声明式列表拖拽时，行元素被移出分组容器（.drag-reorder-ghost > .mod-dragged-item）：
+   空的图标槽位重新占据宽度、内边距脱离分组规则后会被基础样式与第三方覆盖
+   （如主题/插件对 .setting-item 的 padding-block 修改）改变，导致预览文本错位。
+   此处显式声明与列表内一致的内边距（双类选择器提高优先级），并隐藏空槽位；
+   列表内的呈现由分组规则（更高优先级）控制，不受影响。 */
+.easy-copy-matcher-row.easy-copy-matcher-row {
+  padding: var(--size-4-2) var(--size-4-4);
+}
+
+.easy-copy-matcher-row .setting-item-icon {
+  display: none;
+}
