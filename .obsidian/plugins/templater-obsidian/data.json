@@ -1,7 +1,7 @@
 {
   "data_version": 2,
   "command_timeout": 5,
-  "templates_folder": "C++/_templates",
+  "templates_folder": "_templates",
   "templates_pairs": [],
   "trigger_on_file_creation_mode": "none",
   "auto_jump_to_cursor": true,
@@ -13,15 +13,15 @@
   "syntax_highlighting": true,
   "syntax_highlighting_mobile": false,
   "enabled_templates_hotkeys": [
-    "C++/_templates/code_formatter.md",
-    "C++/_templates/format_as_code.md",
+    "_templates/code_formatter.md",
+    "_templates/format_as_code.md",
     {
-      "template": "C++/_templates/char_to_upper.md",
+      "template": "_templates/char_to_upper.md",
       "insert_enabled": true,
       "create_enabled": false
     },
     {
-      "template": "C++/_templates/char_to_lower.md",
+      "template": "_templates/char_to_lower.md",
       "insert_enabled": true,
       "create_enabled": false
     }

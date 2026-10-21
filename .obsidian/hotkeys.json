@@ -42,5 +42,41 @@
       ],
       "key": "O"
     }
+  ],
+  "templater-obsidian:_templates/char_to_lower.md": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "L"
+    }
+  ],
+  "templater-obsidian:_templates/char_to_upper.md": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "U"
+    }
+  ],
+  "templater-obsidian:_templates/code_formatter.md": [
+    {
+      "modifiers": [
+        "Alt",
+        "Ctrl"
+      ],
+      "key": "C"
+    }
+  ],
+  "templater-obsidian:_templates/format_as_code.md": [
+    {
+      "modifiers": [
+        "Alt",
+        "Ctrl"
+      ],
+      "key": "X"
+    }
   ]
 }
