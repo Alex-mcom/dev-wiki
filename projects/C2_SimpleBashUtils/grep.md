@@ -60,3 +60,30 @@ cat file.txt | grep -w -e "-std=c11"
 
 -std=c11
 ```
+
+
+### `-i` (Игнорировать регистр)
+
+Флаг `--ignore-case` делает поиск нечувствительным к регистру символов. Шаблон `Error` будет соответствовать и `error`, и `ERROR`, и `eRrOr`.
+
+```file
+apple
+Apple
+applepen other text
+banana brain
+app and other text
+```
+
+```bash
+cat tests/data/file1.txt | grep -i "apple"
+
+apple
+Apple
+applepen other text
+```
+
+### `-v` (Инвертировать поиск)
+
+Флаг `--invert-match` меняет логику на противоположную: `grep` выводит **только те строки, которые НЕ соответствуют** шаблону. Это полезно для фильтрации нежелательных строк (например, комментариев).[](https://docs.oracle.com/cd/E36784_01/html/E36870/grep-1g.html#1)
+
+**Пример:** Показать все строки в конфигурационном файле, кроме закомментированных (начинающихся с `#`).
