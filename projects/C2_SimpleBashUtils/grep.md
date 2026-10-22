@@ -75,7 +75,7 @@ app and other text
 ```
 
 ```bash
-cat tests/data/file1.txt | grep -i "apple"
+cat tests/data/file.txt | grep -i "apple"
 
 apple
 Apple
@@ -95,7 +95,7 @@ this is not comment
 ```
 
 ```bash
-cat tests/data/file1.txt | grep -v "#"
+cat tests/data/file.txt | grep -v "#"
 
 apple
 Apple
@@ -112,4 +112,68 @@ this is not comment
 grep -l "apple" tests/data/*.txt
 
 tests/data/file1.txt
+```
+
+### `-n` (Номер строки)
+
+Флаг `--line-number` добавляет к каждой выводимой строке **её порядковый номер** в файле. Это очень удобно для навигации по коду или логам
+
+```file1.txt
+apple
+Apple
+milk
+honey
+```
+
+```file2.txt
+cinnabon
+sugar
+coffee
+milk
+```
+
+```bash
+grep "milk" -n tests/data/file1.txt tests/data/file2.txt
+
+tests/data/file1.txt:3:milk
+tests/data/file2.txt:4:milk
+```
+
+### `-h` (Не выводить имена файлов)
+
+Флаг `--no-filename` подавляет вывод имён файлов перед совпавшими строками. Это поведение по умолчанию, если `grep` ищет только в одном файле. Однако при поиске в нескольких файлах `grep` по умолчанию добавляет имя файла к каждой строке, и `-h` отключает это, делая вывод более чистым
+
+*(тестовые данные из примера выше)*
+
+Без флага `-h` (обычное поведение):
+```bash
+grep "milk" tests/data/file1.txt tests/data/file2.txt
+
+tests/data/file1.txt:milk
+tests/data/file2.txt:milk
+```
+
+С флагом:
+```bash
+grep "milk" -h tests/data/file1.txt tests/data/file2.txt
+
+milk
+milk
+```
+
+### `-s` (Подавлять сообщения об ошибках)
+
+Флаг `--no-messages` подавляет вывод сообщений об ошибках, связанных с **несуществующими или нечитаемыми файлами**. Это может быть полезно в скриптах, где отсутствие файла — ожидаемая ситуация.[](https://docs.oracle.com/cd/E36784_01/html/E36870/grep-1g.html#1)
+
+**Пример:** Попытаться найти «data» в файле, который может не существовать, не выводя ошибку, если его нет.
+
+Без флага `-s` появится сообщение об ошибке:
+```bash
+grep "data" possibly_missing_file.txt
+grep: possibly_missing_file.txt: No such file or directory
+```
+
+С флагом:
+```bash
+grep -s "data" possibly_missing_file.txt
 ```
