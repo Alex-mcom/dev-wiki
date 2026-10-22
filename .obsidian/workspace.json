@@ -28,7 +28,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/grep.md",
+                "file": "projects/C2_SimpleBashUtils/grep.md",
                 "mode": "source",
                 "source": false
               },
@@ -50,7 +50,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "projects/grep.md",
+                "file": "projects/C2_SimpleBashUtils/grep.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -216,9 +216,9 @@
   },
   "active": "0abdcbecc5005c24",
   "lastOpenFiles": [
-    "C2_SimpleBashUtilits",
+    "projects/C2_SimpleBashUtils",
     "Без названия.md",
-    "projects/grep.md",
+    "projects/C2_SimpleBashUtils/grep.md",
     "C/make.md",
     "projects",
     "_templates/format_as_code.md",
