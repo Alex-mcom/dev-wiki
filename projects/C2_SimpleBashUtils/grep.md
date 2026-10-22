@@ -56,7 +56,7 @@ grep -e "error" -e "warning" log.txt
 ```
 
 ```bash
-сф grep -w -e "-std=c11"
+cat file.txt | grep -w -e "-std=c11"
 
 -std=c11
 ```
