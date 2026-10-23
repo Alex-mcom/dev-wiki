@@ -228,8 +228,9 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "e7910be6f075a657",
+  "active": "0abdcbecc5005c24",
   "lastOpenFiles": [
+    "projects/C2_SimpleBashUtils/notes.md",
     "C/string.h.md",
     "projects/C2_SimpleBashUtils/grep.md",
     "C/Алгоритмы/Графы.md",
@@ -265,7 +266,6 @@
     "C++/Операции и операторы.md",
     "C/Рекурсия.md",
     "C/Массивы.md",
-    "C++/string.md",
     "C++/_templates",
     "C++",
     "C/imgs/Pasted image 20260926174410.png",
