@@ -93,7 +93,7 @@
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       },
       {
         "id": "d303775a0479071b",
@@ -106,7 +106,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "projects/C2_SimpleBashUtils/grep.md",
+                "file": "C/Алгоритмы/Поиск подстрок/Boyer–Moore–Horspool.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -270,13 +270,13 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "5fb569f9096d75e6",
+  "active": "97de83d7ab145cb9",
   "lastOpenFiles": [
+    "projects/C2_SimpleBashUtils/grep.md",
     "C/Алгоритмы/Поиск подстрок/Boyer–Moore–Horspool.md",
     "C/Работа с файлами.md",
     "C/Управление памятью.md",
     "C/string.h.md",
-    "projects/C2_SimpleBashUtils/grep.md",
     "C/Алгоритмы/Поиск подстрок",
     "C/regex.h.md",
     "C/stdio.h.md",
