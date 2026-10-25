@@ -56,7 +56,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Аргументы командной строки.md",
+                "file": "C/Аргументы командной строки.md",
                 "mode": "source",
                 "source": false
               },
@@ -256,9 +256,9 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "5fb569f9096d75e6",
+  "active": "0abdcbecc5005c24",
   "lastOpenFiles": [
-    "Аргументы командной строки.md",
+    "C/Аргументы командной строки.md",
     "projects/C2_SimpleBashUtils/grep.md",
     "C/regex.h.md",
     "C/Сборка программы.md",
