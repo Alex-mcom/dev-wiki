@@ -92,7 +92,10 @@ grep: warning: stray \ before n
 | `grep -e $'milk\nhoney'` | `milk\0honey\0`              | 2 шаблона, найдёт обе строки |
 | `grep -e "milk\nhoney"`  | `milk\nhoney\0` (слэш + `n`) | 1 шаблон, ничего не найдёт   |
 | `grep -e milk -e honey`  | `milk\0honey\0`              | 2 шаблона, найдёт обе строки |
-При 
+Сырой буфер данных `alloc_buf_t` хранит в себе строкой все найденные шаблоны, разделённые `\0`:
+
+`argv`:   `milk0x0Ahoney\0`      (реальный перевод строки, одна C-строка)
+`alloc_buf_c`:   `milk\0honey\0`      (`\n` → `\0` в `add_pattern`)
 
 ### `-i` (Игнорировать регистр)
 
