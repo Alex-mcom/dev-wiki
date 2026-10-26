@@ -45,6 +45,8 @@ app and other text
 - Когда нужно задать **несколько шаблонов** для поиска.
 - Когда шаблон **начинается с дефиса** (`-`), чтобы `grep` не принял его за флаг
 
+> Шаблон с `\n` внутри `-e` по логике GNU это несколько шаблонов
+
 **Пример:** Найти строки, содержащие «error» или «warning».
 ```bash
 grep -e "error" -e "warning" log.txt
@@ -769,3 +771,180 @@ GNU `grep` оптимизирует даже `regex`:
     
     - В регулярном выражении **нет обязательного литерала** (например, шаблон `.*` или `[a-z]+`).
     - Обязательный литерал **очень короткий** (1-2 символа). В этом случае фильтр будет пропускать слишком много строк, и выигрыш будет незначительным.
+
+## Сборка нескольких шаблонов
+
+При разборе аргументов в `parse_args()` компилировать шаблоны сразу в `regex_t` нельзя, так как даже отказ от `-E` проблему не снимает: `regcomp` зависит не только от `-E`, но и от **`-i`** (`REG_ICASE`), а `-o` определяет, можно ли ставить `REG_NOSUB`. Порядок опций в командной строке произвольный, поэтому в `grep -e abc -i file` на момент разбора `-e` вы ещё не знаете, что нужен `REG_ICASE`. Если скомпилировать сразу, `-i` после `-e` молча не сработает.
+
+Компилировать нужно один раз, после разбора всех аргументов и до чтения файлов. В `case 'e'` это делать нельзя, так как флаги `regcomp` должны быть известны заранее.
+
+**Два формата данных:**
+1. **Сырые шаблоны** (`alloc_buf_t`, `pat1\0pat2\0`). Это транспорт между `parse_args` и компиляцией, ничего больше.
+2. **Скомпилированные** (массив `regex_t` с количеством). С ними работает матчинг.
+
+```c
+// types.h
+typedef struct {
+  regex_t* items;
+  size_t count;  // сколько элементов реально скомпилировано
+} regex_list_t;
+```
+
+
+
+```c
+static size_t count_patterns(const alloc_buf_t* src) {
+  size_t count = 0;
+  const char* end = src->data + src->len;
+
+  for (const char* p = src->data; p < end; p += strlen(p) + 1) count++;
+
+  return count;
+}
+
+static int compile_one(const char* pattern, int cflags, regex_t* re) {
+  int rc = regcomp(re, pattern, cflags);
+
+  if (rc != 0) {
+    char msg[256];
+    regerror(rc, re, msg, sizeof msg);
+    fprintf(stderr, "s21_grep: %s: %s\n", pattern, msg);
+  }
+
+  return rc == 0 ? 0 : -1;
+}
+
+void free_regex_list(regex_list_t* list) {
+  for (size_t i = 0; i < list->count; i++) regfree(&list->items[i]);
+  free(list->items);
+  list->items = NULL;
+  list->count = 0;
+}
+
+int compile_patterns(const alloc_buf_t* src, int cflags, regex_list_t* out) {
+  int status = 0;
+  size_t total = count_patterns(src);
+
+  out->count = 0;
+  
+  // Поскольку нам заранее известно число шаблонов из сырых данных,
+  // мы можем сразу под них всех выделить память
+  out->items = calloc(total, sizeof(regex_t));
+  if (total > 0 && out->items == NULL) status = -1;
+
+  const char* p = src->data;
+  const char* end = src->data + src->len;
+
+  while (status == 0 && p < end) {
+    status = compile_one(p, cflags, &out->items[out->count]);
+    if (status == 0) out->count++;
+    p += strlen(p) + 1;
+  }
+
+  if (status != 0) free_regex_list(out);
+
+  return status;
+}
+
+int main(int argc, char* argv[]) {
+  int status = 0;
+  opts_t opts = {0};
+  
+  // Буфер под сырые данные шаблонов
+  alloc_buf_t raw = {0};
+  
+  // Буфер под скомпилированные шаблоны
+  regex_list_t regs = {0};
+
+  status = parse_args(argc, argv, &opts, &raw);
+  if (status == 0) status = compile_patterns(&raw, make_cflags(&opts), &regs);
+  free(raw.data);  // после компиляции сырые шаблоны не нужны
+  if (status == 0) status = process_files(argc, argv, &opts, &regs);
+  free_regex_list(&regs);  // безопасно и для нулевой структуры
+
+  return status == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
+}
+```
+
+- `count` растёт только после успешного `regcomp`. Поэтому при ошибке на третьем шаблоне `free_regex_list` освободит ровно два. Для неудавшегося `regcomp` вызывать `regfree` не нужно.
+- `regex_t` не хранит ссылку на строку шаблона (в glibc и musl). Значит, сырой буфер можно освобождать сразу после компиляции.
+
+### Зачем `regfree` для каждого, если есть `free(items)`
+
+`free(items)` освобождает только **ту память, которую вы выделили сами**: сам массив структур `regex_t`. Но каждый `regex_t` после успешного `regcomp` внутри держит **собственные указатели на память, которую выделил сам `regcomp`** (скомпилированный автомат, таблицы и т. п.). `free(items)` про эту память ничего не знает, она останется в утечке.
+
+```
+items ──► [ regex_t #0 ][ regex_t #1 ]      ← это освобождает free(items)
+               │              │
+               ▼              ▼
+        внутренний буфер  внутренний буфер  ← это освобождает только regfree
+        (выделил regcomp) (выделил regcomp)
+```
+
+Порядок важен: сначала `regfree` для каждого элемента (пока массив жив), потом `free(items)`. Если сделать наоборот, `regfree` получит указатели на уже освобождённую память.
+
+## Как цикл понимает границы элементов
+
+Он их не ищет, а **вычисляет**. `items` имеет тип `regex_t*`, поэтому компилятор знает `sizeof(regex_t)` и `items[i]` превращает в сдвиг на `i * sizeof(regex_t)` байт от начала:
+
+```c
+items[i]   ≡   *(items + i)   // items + i сдвигает адрес на i * sizeof(regex_t)
+&items[i]  ≡   items + i
+```
+
+Границы задаются тем, что вы при `calloc(total, sizeof(regex_t))` выделили место ровно под `total` структур, а `count` говорит, сколько из них реально инициализировано. Выходить за `count` нельзя, поэтому цикл `i < count`.
+
+## Пример: как выглядит `items`
+
+Команда: `s21_grep -e abc -e 'num[0-9]' -i file.txt`
+
+После разбора аргументов сырой буфер:
+
+```
+raw.data = "abc\0num[0-9]\0"      raw.len = 13
+```
+
+Компиляция:
+
+```c
+regex_list_t regs = {0};
+// count_patterns(&raw) == 2
+regs.items = calloc(2, sizeof(regex_t));
+regs.count = 0;
+
+compile_one("abc",       REG_ICASE, &regs.items[0]);  regs.count = 1;
+compile_one("num[0-9]",  REG_ICASE, &regs.items[1]);  regs.count = 2;
+```
+
+Состояние в памяти:
+
+```
+regs.items ──► ┌─────────────────────────┐
+               │ items[0]: regex_t       │  ← скомпилированный "abc"
+               │   re_nsub = 0           │
+               │   (внутри указатель     │
+               │    на данные regcomp)   │
+               ├─────────────────────────┤
+               │ items[1]: regex_t       │  ← скомпилированный "num[0-9]"
+               │   re_nsub = 0           │
+               │   (внутри указатель...) │
+               └─────────────────────────┘
+regs.count = 2
+```
+
+Использование:
+
+```c
+// строка "Apple num5"
+regexec(&regs.items[0], "Apple num5", 0, NULL, 0);  // REG_NOMATCH ("abc" нет)
+regexec(&regs.items[1], "Apple num5", 0, NULL, 0);  // 0 (совпало "num5")
+```
+
+Освобождение:
+
+```c
+for (size_t i = 0; i < regs.count; i++) regfree(&regs.items[i]);  // внутренняя память regcomp
+free(regs.items);                                                  // массив структур
+```
+
+Обратите внимание, что содержимое `regex_t` (поля внутри) определяет реализация libc, и обращаться к нему напрямую не нужно. Для вас `regex_t` это непрозрачный объект, который работает только в паре `regcomp` → `regexec` → `regfree`.

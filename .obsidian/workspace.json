@@ -65,6 +65,20 @@
             }
           },
           {
+            "id": "47a3365509e92727",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Структурный подход.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Структурный подход"
+            }
+          },
+          {
             "id": "692889c6a9f2eb9f",
             "type": "leaf",
             "state": {
@@ -79,7 +93,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       },
       {
         "id": "d303775a0479071b",
@@ -92,7 +106,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/Аргументы командной строки.md",
+                "file": "projects/C2_SimpleBashUtils/grep.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -256,21 +270,22 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "c2fef45890234181",
+  "active": "5fb569f9096d75e6",
   "lastOpenFiles": [
-    "C/Управление памятью.md",
-    "C/Аргументы командной строки.md",
-    "C/string.h.md",
     "C/regex.h.md",
+    "projects/C2_SimpleBashUtils/grep.md",
+    "Структурный подход.md",
+    "C/stdio.h.md",
+    "C/Аргументы командной строки.md",
+    "C/Управление памятью.md",
+    "C/string.h.md",
     "C/Типы данных.md",
     "C/Операции и операторы.md",
-    "projects/C2_SimpleBashUtils/grep.md",
     "C/Сборка программы.md",
     "C/Работа с файлами.md",
     "!Успешный разбор опции.md",
     "C/Алгоритмы/Поиск подстрок/Boyer–Moore–Horspool.md",
     "C/Алгоритмы/Поиск подстрок",
-    "C/stdio.h.md",
     "C/Указатели.md",
     "C/stdlib.h.md",
     "C/make.md",
@@ -289,7 +304,6 @@
     "C++/_templates/format_as_code.md",
     "VPS.md",
     "TorrServe.md",
-    "INFO.md",
     "Снимок экрана 2026-10-20 в 12.45.30.png",
     "Снимок экрана 2026-10-20 в 12.44.13.png",
     "Снимок экрана 2026-10-20 в 12.43.59.png",
