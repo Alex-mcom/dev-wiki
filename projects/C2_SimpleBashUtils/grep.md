@@ -45,8 +45,6 @@ app and other text
 - Когда нужно задать **несколько шаблонов** для поиска.
 - Когда шаблон **начинается с дефиса** (`-`), чтобы `grep` не принял его за флаг
 
-> Шаблон с `\n` внутри `-e` по логике GNU это несколько шаблонов
-
 **Пример:** Найти строки, содержащие «error» или «warning».
 ```bash
 grep -e "error" -e "warning" log.txt
@@ -65,6 +63,36 @@ cat file.txt | grep -w -e "-std=c11"
 -std=c11
 ```
 
+#### Шаблоны с `$'\n'`
+
+Шаблоны с реальным `\n` внутри `-e` по логике GNU это **несколько разных** шаблонов
+
+```file.txt
+apple
+Apple
+milk
+honey
+firefox
+```
+
+```bash
+grep -e $'apple\nmilk' file.txt
+apple
+milk
+
+grep -e 'apple\nmilk' file.txt
+grep: warning: stray \ before n
+
+grep -e $"apple\nhoney" file.txt
+grep: warning: stray \ before n
+```
+
+| Команда                  | В буфере                     | Результат                    |
+| ------------------------ | ---------------------------- | ---------------------------- |
+| `grep -e $'milk\nhoney'` | `milk\0honey\0`              | 2 шаблона, найдёт обе строки |
+| `grep -e "milk\nhoney"`  | `milk\nhoney\0` (слэш + `n`) | 1 шаблон, ничего не найдёт   |
+| `grep -e milk -e honey`  | `milk\0honey\0`              | 2 шаблона, найдёт обе строки |
+При 
 
 ### `-i` (Игнорировать регистр)
 
