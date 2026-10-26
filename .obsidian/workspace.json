@@ -23,6 +23,20 @@
             }
           },
           {
+            "id": "6cbb50251f6401d0",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "C/Работа с файлами.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Работа с файлами"
+            }
+          },
+          {
             "id": "c2fef45890234181",
             "type": "leaf",
             "state": {
@@ -64,7 +78,8 @@
               "title": "Структурный подход"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       },
       {
         "id": "d303775a0479071b",
@@ -77,7 +92,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "projects/C2_SimpleBashUtils/grep.md",
+                "file": "C/Работа с файлами.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -241,15 +256,15 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "5fb569f9096d75e6",
+  "active": "6cbb50251f6401d0",
   "lastOpenFiles": [
+    "projects/C2_SimpleBashUtils/grep.md",
     "C/regex.h.md",
     "C/Типы данных.md",
     "C/stdio.h.md",
     "C/Аргументы командной строки.md",
     "Структурный подход.md",
     "C/Управление памятью.md",
-    "projects/C2_SimpleBashUtils/grep.md",
     "C/string.h.md",
     "C/Операции и операторы.md",
     "C/Сборка программы.md",
