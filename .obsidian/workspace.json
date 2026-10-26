@@ -9,20 +9,6 @@
         "dimension": 73.63013698630137,
         "children": [
           {
-            "id": "95b1d57feed7bdbc",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "C/make.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "make"
-            }
-          },
-          {
             "id": "5fb569f9096d75e6",
             "type": "leaf",
             "state": {
@@ -92,13 +78,12 @@
               "title": "Управление памятью"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       },
       {
         "id": "d303775a0479071b",
         "type": "tabs",
-        "dimension": 26.36986301369863,
+        "dimension": 26.369863013698634,
         "children": [
           {
             "id": "b49ecfd167393753",
@@ -272,11 +257,11 @@
   },
   "active": "5fb569f9096d75e6",
   "lastOpenFiles": [
-    "C/regex.h.md",
-    "projects/C2_SimpleBashUtils/grep.md",
-    "Структурный подход.md",
-    "C/stdio.h.md",
     "C/Аргументы командной строки.md",
+    "Структурный подход.md",
+    "projects/C2_SimpleBashUtils/grep.md",
+    "C/regex.h.md",
+    "C/stdio.h.md",
     "C/Управление памятью.md",
     "C/string.h.md",
     "C/Типы данных.md",
