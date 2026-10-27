@@ -78,8 +78,7 @@
               "title": "Структурный подход"
             }
           }
-        ],
-        "currentTab": 3
+        ]
       },
       {
         "id": "d303775a0479071b",
@@ -92,7 +91,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/regex.h.md",
+                "file": "projects/C2_SimpleBashUtils/grep.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -256,14 +255,14 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "0b593db8cdbea3d3",
+  "active": "5fb569f9096d75e6",
   "lastOpenFiles": [
+    "C/regex.h.md",
     "C/Работа с файлами.md",
     "projects/C2_SimpleBashUtils/cat.md",
     "C/stdio.h.md",
     "C/Аргументы командной строки.md",
     "projects/C2_SimpleBashUtils/grep.md",
-    "C/regex.h.md",
     "C/string.h.md",
     "C/Типы данных.md",
     "Структурный подход.md",
