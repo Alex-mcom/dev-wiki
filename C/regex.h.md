@@ -148,7 +148,7 @@ regcomp(&regex, "first.second", REG_EXTENDED | REG_NEWLINE);
 regcomp(&regex, "^second", REG_EXTENDED | REG_NEWLINE);
 ```
 
-## `regexec()`
+e## `regexec()`
 
 ```c
 int regexec(const regex_t *preg, const char *string, size_t nmatch, regmatch_t pmatch[], int eflags)
