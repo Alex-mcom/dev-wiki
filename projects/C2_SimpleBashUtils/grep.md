@@ -306,6 +306,7 @@ grep -w -oE "[0-9]+" tests/data/strings.txt
 const char *p = line;
 int first = 1;
 regmatch_t m;
+
 while (regexec(&re, p, 1, &m, first ? 0 : REG_NOTBOL) == 0) {
     int len = m.rm_eo - m.rm_so;
     if (len == 0) {            // пустое совпадение — защита от зацикливания
