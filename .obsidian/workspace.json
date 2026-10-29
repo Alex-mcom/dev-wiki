@@ -92,8 +92,7 @@
               "title": "Структурный подход"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       },
       {
         "id": "d303775a0479071b",
@@ -106,7 +105,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/Операции и операторы.md",
+                "file": "projects/C2_SimpleBashUtils/grep.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -270,8 +269,9 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "15a967022647fe88",
+  "active": "5fb569f9096d75e6",
   "lastOpenFiles": [
+    "C/Операции и операторы.md",
     "C/Работа с файлами.md",
     "C/Типы данных.md",
     "projects/C2_SimpleBashUtils/grep.md",
@@ -282,7 +282,6 @@
     "C/Аргументы командной строки.md",
     "C/string.h.md",
     "C/Управление памятью.md",
-    "C/Операции и операторы.md",
     "C/Сборка программы.md",
     "!Успешный разбор опции.md",
     "C/Алгоритмы/Поиск подстрок/Boyer–Moore–Horspool.md",
