@@ -79,7 +79,7 @@
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 3
       },
       {
         "id": "d303775a0479071b",
@@ -92,7 +92,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/Аргументы командной строки.md",
+                "file": "C/regex.h.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -256,10 +256,10 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "1c566f95719baa68",
+  "active": "0b593db8cdbea3d3",
   "lastOpenFiles": [
-    "projects/C2_SimpleBashUtils/grep.md",
     "C/Аргументы командной строки.md",
+    "projects/C2_SimpleBashUtils/grep.md",
     "C/Операции и операторы.md",
     "C/Работа с файлами.md",
     "C/Типы данных.md",
