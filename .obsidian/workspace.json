@@ -259,6 +259,7 @@
   "active": "1c566f95719baa68",
   "lastOpenFiles": [
     "projects/C2_SimpleBashUtils/grep.md",
+    "C/Аргументы командной строки.md",
     "C/Операции и операторы.md",
     "C/Работа с файлами.md",
     "C/Типы данных.md",
@@ -266,7 +267,6 @@
     "C/regex.h.md",
     "Структурный подход.md",
     "projects/C2_SimpleBashUtils/cat.md",
-    "C/Аргументы командной строки.md",
     "C/string.h.md",
     "C/Управление памятью.md",
     "C/Сборка программы.md",
