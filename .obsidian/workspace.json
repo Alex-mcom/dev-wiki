@@ -23,6 +23,20 @@
             }
           },
           {
+            "id": "1c566f95719baa68",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "C/Аргументы командной строки.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Аргументы командной строки"
+            }
+          },
+          {
             "id": "d6cd21bb333db7a6",
             "type": "leaf",
             "state": {
@@ -34,34 +48,6 @@
               },
               "icon": "lucide-file",
               "title": "Работа с файлами"
-            }
-          },
-          {
-            "id": "15a967022647fe88",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "C/Операции и операторы.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Операции и операторы"
-            }
-          },
-          {
-            "id": "e3aff456bff8a6d0",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "C/stdio.h.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "stdio.h"
             }
           },
           {
@@ -92,7 +78,8 @@
               "title": "Структурный подход"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       },
       {
         "id": "d303775a0479071b",
@@ -105,7 +92,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "projects/C2_SimpleBashUtils/grep.md",
+                "file": "C/Аргументы командной строки.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -269,12 +256,12 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "5fb569f9096d75e6",
+  "active": "1c566f95719baa68",
   "lastOpenFiles": [
+    "projects/C2_SimpleBashUtils/grep.md",
     "C/Операции и операторы.md",
     "C/Работа с файлами.md",
     "C/Типы данных.md",
-    "projects/C2_SimpleBashUtils/grep.md",
     "C/stdio.h.md",
     "C/regex.h.md",
     "Структурный подход.md",
