@@ -79,7 +79,7 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 1
       },
       {
         "id": "d303775a0479071b",
@@ -92,7 +92,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/Типы данных.md",
+                "file": "Методология.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -256,12 +256,13 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "c0cf4eb185082926",
+  "active": "e7936e1caa800c4d",
   "lastOpenFiles": [
-    "Структурный подход.md",
-    "C/make.md",
     "Рефакторинг s21_grep.md",
     "Методология.md",
+    "C/Типы данных.md",
+    "Структурный подход.md",
+    "C/make.md",
     "C/Сборка программы.md",
     "C/regex.h.md",
     "C/Работа с файлами.md",
@@ -269,7 +270,6 @@
     "projects/C2_SimpleBashUtils/grep.md",
     "C/Алгоритмы/Поиск подстрок/Boyer–Moore–Horspool.md",
     "C/Операции и операторы.md",
-    "C/Типы данных.md",
     "C/stdio.h.md",
     "projects/C2_SimpleBashUtils/cat.md",
     "C/string.h.md",
