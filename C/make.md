@@ -344,7 +344,7 @@ all: s21_cat docs tests
 
 .PHONY: clean
 clean:
-	rm -f s21_cat $(OBJS) $(DEPS)
+	rm -f $(TARGET) $(OBJS) $(DEPS)
 ```
 
 Всегда выполняет `rm`, даже если файл `clean` существует. Должна удалять **все** артефакты, включая `.d`-файлы при `-MMD`
