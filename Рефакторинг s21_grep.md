@@ -118,34 +118,34 @@ static bool FindLeftmostMatch(const RegexList* regexes, const char* text,
 
 Предлагаемые переименования:
 
-|Было|Стало|
-|---|---|
-|`show_help`|`PrintUsage`|
-|`parse_args`|`ParseCommandLine`|
-|`set_pattern`|`ResolvePatternOperand`|
-|`add_raw_pattern`|`AddRawPattern`|
-|`read_pattern_file`|`LoadPatternFile`|
-|`compline_patterns`|`CompilePatterns`|
-|`free_regex_list`|`FreeRegexList`|
-|`ensure_capacity`|`ReserveCapacity`|
-|`single_matcher`, `multi_matcher`, `match_all_in_line`|`LineMatches`, `PrintOnlyMatching`|
-|`print_match`|`PrintLine`|
-|`show_counting_results`|`PrintFileSummary`|
-|`process_file`|`SearchFile`|
-|`set_exit_code`|`ComputeExitCode`|
-|`exit_cycle`|`done`|
-|`reti`|`status`|
-|`line_buf`, `nread`|`line`, `line_length`|
-|`matchs_count`|`match_count`|
-|`was_e_or_f`|`has_pattern_option`|
-|`was_match_global`|`any_line_selected`|
-|`was_error_global`|`any_file_error`|
-|`more_than_one_file`|`multiple_files`|
-|`MIN_ALLOC_BUF_CAP`|`kMinCapacity`|
-|`S21`|`kProgramName`|
-|`show_counting`|`count_only`|
-|`show_only_filenames`|`list_files_only`|
-|`show_only_matching`|`only_matching`|
+| Было                                                   | Стало                              |
+| ------------------------------------------------------ | ---------------------------------- |
+| `show_help`                                            | `PrintUsage`                       |
+| `parse_args`                                           | `ParseCommandLine`                 |
+| `set_pattern`                                          | `ResolvePatternOperand`            |
+| `add_raw_pattern`                                      | `AddRawPattern`                    |
+| `read_pattern_file`                                    | `LoadPatternFile`                  |
+| `compline_patterns`                                    | `CompilePatterns`                  |
+| `free_regex_list`                                      | `FreeRegexList`                    |
+| `ensure_capacity`                                      | `ReserveCapacity`                  |
+| `single_matcher`, `multi_matcher`, `match_all_in_line` | `LineMatches`, `PrintOnlyMatching` |
+| `print_match`                                          | `PrintLine`                        |
+| `show_counting_results`                                | `PrintFileSummary`                 |
+| `process_file`                                         | `SearchFile`                       |
+| `set_exit_code`                                        | `ComputeExitCode`                  |
+| `exit_cycle`                                           | `done`                             |
+| `reti`                                                 | `status`                           |
+| `line_buf`, `nread`                                    | `line`, `line_length`              |
+| `matchs_count`                                         | `match_count`                      |
+| `was_e_or_f`                                           | `has_pattern_option`               |
+| `was_match_global`                                     | `any_line_selected`                |
+| `was_error_global`                                     | `any_file_error`                   |
+| `more_than_one_file`                                   | `multiple_files`                   |
+| `MIN_ALLOC_BUF_CAP`                                    | `kMinCapacity`                     |
+| `S21`                                                  | `kProgramName`                     |
+| `show_counting`                                        | `count_only`                       |
+| `show_only_filenames`                                  | `list_files_only`                  |
+| `show_only_matching`                                   | `only_matching`                    |
 
 ## 6. Структуры и прототипы
 

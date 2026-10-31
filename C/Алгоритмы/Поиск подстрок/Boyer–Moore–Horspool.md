@@ -85,6 +85,7 @@ i += shift[bad_char];
 
 # Реализация
 
+## Вариант 1
 
 ```c
 void preBmBc(char *x, int m, int bmBc[]) {
@@ -120,6 +121,72 @@ void HORSPOOL(char *x, int m, char *y, int n) {
 - `n` — длина текста `y`.
 
 Чтобы не выйти за конец текста длины `n`, нужно вычитать длину шаблона.
+
+## Вариант 2
+
+```c
+#include <stdbool.h>
+#include <stdio.h>
+#include <string.h>
+
+#define SHIFT_SIZE 256
+
+int build_shift(size_t shift[], const char findstr[]) {
+  size_t m = strlen(findstr);
+
+  if (m == 0) return 1;
+
+  for (size_t i = 0; i < SHIFT_SIZE; i++) {
+    shift[i] = m;
+  }
+
+  for (size_t i = 0; i < m - 1; i++) {
+    shift[(unsigned char)findstr[i]] = m - i - 1;
+  }
+
+  return 0;
+}
+
+void compare(const char findstr[], const char text[], const size_t shift[]) {
+  size_t m = strlen(findstr);
+  size_t text_len = strlen(text);
+
+  size_t i = 0;
+  while (i + m <= text_len) {
+    unsigned char right = text[i + m - 1];
+    unsigned char last = findstr[m - 1];
+
+    if (right == last) {
+      size_t k = m;
+      while (k > 0 && text[i + k - 1] == findstr[k - 1]) k--;
+
+      if (k == 0) {
+        printf("Есть совпадение по индексу %zu!\n", i);
+        break;
+      }
+    }
+    i += shift[right];
+  }
+}
+
+int main(int argc, char* argv[]) {
+  bool is_error = false;
+
+  const char* findstr = "data";
+
+  size_t shift[SHIFT_SIZE];
+  build_shift(shift, findstr);
+
+  for (size_t i = 0; i < strlen(findstr); i++) {
+    printf("shift['%c'] = %zu\n", findstr[i], shift[(unsigned char)findstr[i]]);
+  }
+
+  const char* text = "lang datesofa str data";
+  compare(findstr, text, shift);
+
+  return is_error;
+}
+```
 
 Основные различия:
 
