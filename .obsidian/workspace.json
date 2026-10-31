@@ -106,8 +106,7 @@
               "title": "Структурный подход"
             }
           }
-        ],
-        "currentTab": 5
+        ]
       },
       {
         "id": "d303775a0479071b",
@@ -120,7 +119,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/make.md",
+                "file": "projects/C2_SimpleBashUtils/grep.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -284,8 +283,9 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "a30457fba1c38912",
+  "active": "5fb569f9096d75e6",
   "lastOpenFiles": [
+    "C/make.md",
     "Рефакторинг s21_grep.md",
     "Структурный подход.md",
     "C/Сборка программы.md",
@@ -304,7 +304,6 @@
     "C/Алгоритмы/Поиск подстрок",
     "C/Указатели.md",
     "C/stdlib.h.md",
-    "C/make.md",
     "_templates/code_formatter.md",
     "C/Алгоритмы/Графы.md",
     "Без названия 1.md",
