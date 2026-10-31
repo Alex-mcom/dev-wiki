@@ -79,7 +79,7 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 1
       },
       {
         "id": "d303775a0479071b",
@@ -92,7 +92,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/make.md",
+                "file": "Методология.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -256,13 +256,13 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "e02329b054095a2f",
+  "active": "e7936e1caa800c4d",
   "lastOpenFiles": [
+    "C/make.md",
     "Структурный подход.md",
     "C/Сборка программы.md",
     "Рефакторинг s21_grep.md",
     "Методология.md",
-    "C/make.md",
     "C/regex.h.md",
     "C/Работа с файлами.md",
     "C/Аргументы командной строки.md",
