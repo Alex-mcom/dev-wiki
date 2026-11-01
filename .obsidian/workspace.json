@@ -106,8 +106,7 @@
               "title": "Типы данных"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       },
       {
         "id": "d303775a0479071b",
@@ -120,7 +119,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/regex.h.md",
+                "file": "projects/C2_SimpleBashUtils/grep.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -284,8 +283,9 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "9466552f85b97c1d",
+  "active": "5fb569f9096d75e6",
   "lastOpenFiles": [
+    "C/regex.h.md",
     "projects/C2_SimpleBashUtils/grep.md",
     "_cat.md",
     "_Структурный подход.md",
@@ -294,7 +294,6 @@
     "C/Типы данных.md",
     "C/make.md",
     "C/Сборка программы.md",
-    "C/regex.h.md",
     "C/Работа с файлами.md",
     "C/Аргументы командной строки.md",
     "C/Алгоритмы/Поиск подстрок/Boyer–Moore–Horspool.md",
