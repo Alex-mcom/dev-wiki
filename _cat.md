@@ -53,7 +53,7 @@ static void ProcessByte(CatState* state, unsigned char byte);
 
 // static. Если в начале строки нужна нумерация (-n для всех строк,
 // -b только для непустых), увеличивает line_number и добавляет
-// в вывод префикс "%6lu\t".
+// в вывод префикс "%6lu\t".FOu
 static void NumberLine(CatState* state, bool blank_line);
 
 // static. Преобразует байт в видимое представление по флагам
