@@ -79,7 +79,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 4
       },
       {
         "id": "d303775a0479071b",
@@ -92,7 +92,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "projects/C2_SimpleBashUtils/cat.md",
+                "file": "C/Работа с файлами.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -256,14 +256,14 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "a55b6495f05eaf18",
+  "active": "0d890d51af82cbb6",
   "lastOpenFiles": [
+    "projects/C2_SimpleBashUtils/cat.md",
     "_cat.md",
     "C/Работа с файлами.md",
     "C/stdio.h.md",
     "C/string.h.md",
     "C/Типы данных.md",
-    "projects/C2_SimpleBashUtils/cat.md",
     "C/Аргументы командной строки.md",
     "_Рефакторинг s21_grep.md",
     "_Методология.md",
