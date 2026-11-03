@@ -272,10 +272,10 @@
   },
   "active": "a55b6495f05eaf18",
   "lastOpenFiles": [
-    "_docker.md",
-    "projects/C2_SimpleBashUtils/cat.md",
-    "_cat.md",
     "C/stdio.h.md",
+    "projects/C2_SimpleBashUtils/cat.md",
+    "_docker.md",
+    "_cat.md",
     "C/string.h.md",
     "C/Работа с файлами.md",
     "C/Типы данных.md",
