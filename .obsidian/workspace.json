@@ -93,7 +93,7 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 3
       },
       {
         "id": "d303775a0479071b",
@@ -106,7 +106,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/stdio.h.md",
+                "file": "projects/C2_SimpleBashUtils/cat.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -270,14 +270,14 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "ed6124c97452ecc4",
+  "active": "a55b6495f05eaf18",
   "lastOpenFiles": [
+    "_cat.md",
+    "C/stdio.h.md",
     "projects/C2_SimpleBashUtils/cat.md",
     "C/Работа с файлами.md",
     "C/Операции и операторы.md",
-    "C/stdio.h.md",
     "_docker.md",
-    "_cat.md",
     "C/string.h.md",
     "C/Типы данных.md",
     "C/Аргументы командной строки.md",
