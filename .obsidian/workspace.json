@@ -93,7 +93,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       },
       {
         "id": "d303775a0479071b",
@@ -106,7 +106,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "_docker.md",
+                "file": "projects/C2_SimpleBashUtils/cat.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -270,10 +270,10 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "27cbdc80fe02c993",
+  "active": "a55b6495f05eaf18",
   "lastOpenFiles": [
-    "_cat.md",
     "_docker.md",
+    "_cat.md",
     "C/stdio.h.md",
     "C/string.h.md",
     "C/Работа с файлами.md",
