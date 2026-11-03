@@ -93,7 +93,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       },
       {
         "id": "d303775a0479071b",
@@ -106,7 +106,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "projects/C2_SimpleBashUtils/cat.md",
+                "file": "C/stdio.h.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -270,10 +270,10 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "a55b6495f05eaf18",
+  "active": "ed6124c97452ecc4",
   "lastOpenFiles": [
-    "C/stdio.h.md",
     "projects/C2_SimpleBashUtils/cat.md",
+    "C/stdio.h.md",
     "_docker.md",
     "_cat.md",
     "C/string.h.md",
