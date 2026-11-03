@@ -15,6 +15,20 @@
 |      Нет      | `--help`             | Показывает справку и выходит.                                            |                 |
 |      Нет      | `--version`          | Показывает информацию о версии и выходит.                                |                 |
 
+```bash
+BusyBox v1.36.1 (2025-11-23 14:32:18 UTC) multi-call binary.
+
+Usage: cat [-nbvteA] [FILE]...
+
+Print FILEs to stdout
+
+        -n      Number output lines
+        -b      Number nonempty lines
+        -v      Show nonprinting characters as ^x or M-x
+        -t      ...and tabs as ^I
+        -e      ...and end lines with $
+        -A      Same as -vte
+```
 
 ### Семантика флагов на уровне программы
 
