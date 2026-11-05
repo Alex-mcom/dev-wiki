@@ -107,7 +107,7 @@
             }
           }
         ],
-        "currentTab": 6
+        "currentTab": 2
       },
       {
         "id": "d303775a0479071b",
@@ -120,7 +120,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/Операции и операторы.md",
+                "file": "_docker.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -284,10 +284,10 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "5e6b1de1ffde8609",
+  "active": "27cbdc80fe02c993",
   "lastOpenFiles": [
-    "C/stdio.h.md",
     "C/Операции и операторы.md",
+    "C/stdio.h.md",
     "C/Работа с файлами.md",
     "C/string.h.md",
     "projects/C2_SimpleBashUtils/cat.md",
