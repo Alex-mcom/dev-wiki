@@ -258,9 +258,9 @@
   },
   "active": "af6ad756e36eadb2",
   "lastOpenFiles": [
-    "C/check.h.md",
-    "C/Утилиты/gcc.md",
     "C/Сборка программы.md",
+    "C/Утилиты/gcc.md",
+    "C/check.h.md",
     "C/Операции и операторы.md",
     "C/Утилиты/make.md",
     "C/stdio.h.md",
