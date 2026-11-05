@@ -9,62 +9,6 @@
         "dimension": 73.63013698630137,
         "children": [
           {
-            "id": "5fb569f9096d75e6",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "projects/C2_SimpleBashUtils/grep.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "grep"
-            }
-          },
-          {
-            "id": "bb5f492956abc328",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "_cat.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "_cat"
-            }
-          },
-          {
-            "id": "27cbdc80fe02c993",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "_docker.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "_docker"
-            }
-          },
-          {
-            "id": "a55b6495f05eaf18",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "projects/C2_SimpleBashUtils/cat.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "cat"
-            }
-          },
-          {
             "id": "09d18375574ce82c",
             "type": "leaf",
             "state": {
@@ -90,6 +34,20 @@
               },
               "icon": "lucide-file",
               "title": "stdio.h"
+            }
+          },
+          {
+            "id": "19ea2e6840c3dff2",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "C/make.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "make"
             }
           },
           {
@@ -120,7 +78,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "_docker.md",
+                "file": "C/make.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -284,22 +242,22 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "27cbdc80fe02c993",
+  "active": "19ea2e6840c3dff2",
   "lastOpenFiles": [
-    "C/Операции и операторы.md",
     "C/stdio.h.md",
-    "C/Работа с файлами.md",
-    "C/string.h.md",
-    "projects/C2_SimpleBashUtils/cat.md",
-    "C/Массивы.md",
     "C/Типы данных.md",
+    "projects/C2_SimpleBashUtils/grep.md",
+    "projects/C2_SimpleBashUtils/cat.md",
     "_cat.md",
     "_docker.md",
+    "C/Операции и операторы.md",
+    "C/Работа с файлами.md",
+    "C/string.h.md",
+    "C/Массивы.md",
     "C/Аргументы командной строки.md",
     "_Рефакторинг s21_grep.md",
     "_Методология.md",
     "C/regex.h.md",
-    "projects/C2_SimpleBashUtils/grep.md",
     "_Структурный подход.md",
     "C/make.md",
     "C/Сборка программы.md",
