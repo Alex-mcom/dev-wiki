@@ -1,0 +1,4 @@
+
+```bash
+brew install check
+```
