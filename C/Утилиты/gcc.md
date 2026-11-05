@@ -1,6 +1,23 @@
-## Что такое GCC
 
 **GCC (GNU Compiler Collection)** — набор компиляторов проекта GNU. Раньше расшифровывался как _GNU C Compiler_, но теперь умеет не только C: C++, Objective-C, Fortran, Ada, Go, D. Для каждого языка есть свой _front end_ (разбор исходника), а общая часть (_middle end_ и _back end_) оптимизирует код и генерирует машинные инструкции под нужную архитектуру (x86-64, ARM, RISC-V и т. д.).
+
+| Задача                                             | Команда                                                             |
+| -------------------------------------------------- | ------------------------------------------------------------------- |
+| Только препроцессор                                | `gcc -E main.c -o main.i`                                           |
+| Получить ассемблер                                 | `gcc -S main.c -o main.s`                                           |
+| Скомпилировать без линковки                        | `gcc -c main.c -o main.o`                                           |
+| Скомпилировать с заголовками из каталога `include` | `gcc -I include -c main.c`                                          |
+| Слинковать объекты                                 | `gcc main.o add.o mul.o -o app`                                     |
+| Сразу из исходников                                | `gcc main.c add.c mul.c -o app`                                     |
+| Все предупреждения как ошибки                      | `gcc -Wall -Wextra -Werror -std=c11 ...`                            |
+| Собрать статическую библиотеку                     | `ar rcs libcalc.a add.o mul.o`                                      |
+| Подключить `libcalc.a` из текущего каталога        | `gcc main.o -L. -lcalc -o app`                                      |
+| Подключить `libcalc.a` из каталога `lib`           | `gcc main.o -L lib -lcalc -o app`                                   |
+| Подключить `.a` по пути                            | `gcc main.o lib/libcalc.a -o app`                                   |
+| Показать пути поиска библиотек                     | `gcc -print-search-dirs`                                            |
+| Показать, что запускает gcc                        | `gcc -v main.o -o app`                                              |
+| Динамические зависимости программы                 | `ldd app`                                                           |
+| Собрать динамическую библиотеку                    | `gcc -fPIC -c add.c mul.c && gcc -shared add.o mul.o -o libcalc.so` |
 
 ### Команда `gcc` — это драйвер
 
@@ -538,23 +555,3 @@ gcc main.o -L . -l:s21_string.a -o app
 3. `gcc -I include -c main.c` — скомпилировать программу, заголовок через `-I`.
 4. `gcc main.o -L lib -lcalc -o app` — слинковать с библиотекой, архив после объектов.
 5. `./app` — запустить; файл `libcalc.a` больше не нужен.
-
-# Шпаргалка
-
-| Задача                                             | Команда                                                             |
-| -------------------------------------------------- | ------------------------------------------------------------------- |
-| Только препроцессор                                | `gcc -E main.c -o main.i`                                           |
-| Получить ассемблер                                 | `gcc -S main.c -o main.s`                                           |
-| Скомпилировать без линковки                        | `gcc -c main.c -o main.o`                                           |
-| Скомпилировать с заголовками из каталога `include` | `gcc -I include -c main.c`                                          |
-| Слинковать объекты                                 | `gcc main.o add.o mul.o -o app`                                     |
-| Сразу из исходников                                | `gcc main.c add.c mul.c -o app`                                     |
-| Все предупреждения как ошибки                      | `gcc -Wall -Wextra -Werror -std=c11 ...`                            |
-| Собрать статическую библиотеку                     | `ar rcs libcalc.a add.o mul.o`                                      |
-| Подключить `libcalc.a` из текущего каталога        | `gcc main.o -L. -lcalc -o app`                                      |
-| Подключить `libcalc.a` из каталога `lib`           | `gcc main.o -L lib -lcalc -o app`                                   |
-| Подключить `.a` по пути                            | `gcc main.o lib/libcalc.a -o app`                                   |
-| Показать пути поиска библиотек                     | `gcc -print-search-dirs`                                            |
-| Показать, что запускает gcc                        | `gcc -v main.o -o app`                                              |
-| Динамические зависимости программы                 | `ldd app`                                                           |
-| Собрать динамическую библиотеку                    | `gcc -fPIC -c add.c mul.c && gcc -shared add.o mul.o -o libcalc.so` |
