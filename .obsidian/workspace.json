@@ -121,7 +121,7 @@
             }
           }
         ],
-        "currentTab": 6
+        "currentTab": 5
       },
       {
         "id": "d303775a0479071b",
@@ -134,7 +134,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/Системы счисления.md",
+                "file": "projects/C3/string.h.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -298,10 +298,12 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "5fe991ad4b42f379",
+  "active": "16afea01b5292d8f",
   "lastOpenFiles": [
-    "projects/C3/string.h.md",
     "C/string.h.md",
+    "C/Указатели.md",
+    "C/Системы счисления.md",
+    "projects/C3/string.h.md",
     "projects/C3/s21_string.md",
     "C/Утилиты/make.md",
     "C/Утилиты/gcc.md",
@@ -327,8 +329,6 @@
     "C/Управление памятью.md",
     "!Успешный разбор опции.md",
     "C/Алгоритмы/Поиск подстрок",
-    "C/Указатели.md",
-    "C/stdlib.h.md",
     "projects/C2_SimpleBashUtils",
     "projects",
     "_templates",
