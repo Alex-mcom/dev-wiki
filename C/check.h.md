@@ -285,14 +285,32 @@ tests.c:40:E:core:test_memcpy:0: (after this point) Received signal 11 (Segmenta
 srunner_set_fork_status(sr, CK_NOFORK);
 ```
 
-или без изменения кода:
+или без изменения кода в **Makefile** просто задать переменную окружения. Тогда включение/отключением **fork** можно управлять снаружи (важно при этом не вызывать `srunner_set_fork_status()` в коде):
 
-```bash
-CK_FORK=no ./test
+```c
+int main(void) {
+  SRunner *sr = srunner_create(my_suite());
+  srunner_run_all(sr, CK_NORMAL);
+  int failed = srunner_ntests_failed(sr);
+  srunner_free(sr);
+  return failed == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
+}
+```
+
+```Makefile
+CC = gcc
+CFLAGS = -Wall -Werror -Wextra -std=c11
+CHECK_LIBS = $(shell pkg-config --cflags --libs check)
+
+test: s21_string.a tests.o
+	$(CC) tests.o s21_string.a -o test $(CHECK_LIBS)
+	./test
+
+valgrind: test
+	CK_FORK=no valgrind --leak-check=full --error-exitcode=1 ./test
 ```
 
 Когда нужен:
-
 - отладка в `gdb`;
 - запуск под `valgrind` (проверка утечек и чтения за границами);
 - диагностика, если fork мешает чему-то в окружении.
