@@ -64,8 +64,7 @@
               "title": "string.h"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       },
       {
         "id": "d303775a0479071b",
@@ -78,7 +77,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "projects/C3/string.h.md",
+                "file": "C/check.h.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -242,15 +241,15 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "16afea01b5292d8f",
+  "active": "dc81a8c9e70df185",
   "lastOpenFiles": [
+    "projects/C3/string.h.md",
     "C/Утилиты/lldb.md",
     "projects/C3/s21_string.md",
     "C/Утилиты/gcc.md",
     "_docker.md",
     "C/check.h.md",
     "C/Утилиты/make.md",
-    "projects/C3/string.h.md",
     "C/string.h.md",
     "C/Системы счисления.md",
     "C/Аргументы командной строки.md",
