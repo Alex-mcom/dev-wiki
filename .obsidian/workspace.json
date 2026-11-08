@@ -14,12 +14,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "C/check.h.md",
+                "file": "C/Утилиты/_gcov.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "check.h"
+              "title": "_gcov"
+            }
+          },
+          {
+            "id": "243938475adb45bc",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "_Рефакторинг s21_grep.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "_Рефакторинг s21_grep"
             }
           },
           {
@@ -28,12 +42,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "C/_check.h.md",
+                "file": "C/check.h.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "_check.h"
+              "title": "check.h"
             }
           },
           {
@@ -78,7 +92,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/_check.h.md",
+                "file": "_Рефакторинг s21_grep.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -242,14 +256,17 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "12070dcea43e950e",
+  "active": "243938475adb45bc",
   "lastOpenFiles": [
-    "C/check.h.md",
-    "C/_check.h.md",
     "projects/C3/string.h.md",
+    "_Структурный подход.md",
+    "C/check.h.md",
+    "_Методология.md",
+    "projects/C3/s21_string.md",
+    "_Рефакторинг s21_grep.md",
+    "C/Утилиты/_gcov.md",
     "C/Утилиты/gcc.md",
     "C/Утилиты/make.md",
-    "projects/C3/s21_string.md",
     "C/Утилиты/lldb.md",
     "_docker.md",
     "C/string.h.md",
@@ -267,10 +284,7 @@
     "_cat.md",
     "C/Работа с файлами.md",
     "C/Массивы.md",
-    "_Рефакторинг s21_grep.md",
-    "_Методология.md",
     "C/regex.h.md",
-    "_Структурный подход.md",
     "C/Алгоритмы/Поиск подстрок/Boyer–Moore–Horspool.md",
     "C/Алгоритмы/Поиск подстрок",
     "projects/C2_SimpleBashUtils",

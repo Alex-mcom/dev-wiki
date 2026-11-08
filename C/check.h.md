@@ -9,7 +9,7 @@
 
 ---
 
-> [!Ключевая особенность: изоляция через fork]
+**Ключевая особенность: изоляция через `fork`**
 
 По умолчанию каждый тест запускается в **отдельном процессе** (`fork`). Это даёт три вещи:
 
@@ -17,15 +17,9 @@
 - Тесты не влияют друг на друга: глобальное состояние и порча памяти остаются в своём процессе.
 - Можно проверять, что функция **должна** упасть с сигналом или завершиться с определённым кодом.
 
-Минус: отладка через `gdb` и `valgrind` в режиме fork неудобна, поэтому для неё fork отключают.
+>Минус: отладка через `gdb` и `valgrind` в режиме fork неудобна, поэтому для неё `fork` отключают.
 
-Для проектов вроде своей реализации `string.h`, `sprintf`, `sscanf` Check нужен, чтобы сравнивать вашу функцию с эталонной из libc на множестве входных данных:
-
-```c
-ck_assert_int_eq(s21_strlen(str), strlen(str));
-```
-
-## Установка и сборка
+# Установка и сборка
 
 ```bash
 # Debian / Ubuntu
@@ -49,7 +43,25 @@ gcc -Wall -Werror -Wextra -std=c11 tests.c s21_string.a -o test $(pkg-config --c
 
 На Linux для Check обычно нужны дополнительные библиотеки: `-lcheck -lsubunit -lrt -lm -lpthread`. `pkg-config` подставит их сам. Если его нет, перечисляйте вручную. Порядок важен: библиотеки линкуются **после** исходников.
 
-## Архитектура тестов
+
+## Переменные окружения
+
+Позволяют управлять запуском без перекомпиляции.
+
+|Переменная|Эффект|
+|---|---|
+|`CK_RUN_SUITE=s21_strlen`|Запустить только этот Suite.|
+|`CK_RUN_CASE=core`|Запустить только этот TCase.|
+|`CK_VERBOSITY=silent\|minimal\|normal\|verbose`|Уровень вывода при `CK_ENV`.|
+|`CK_FORK=no`|Отключить fork (при `CK_FORK_GETENV`, а также по умолчанию в более старых версиях).|
+|`CK_DEFAULT_TIMEOUT=10`|Таймаут по умолчанию, секунд.|
+|`CK_TIMEOUT_MULTIPLIER=5`|Умножить все таймауты (полезно под valgrind).|
+|`CK_INCLUDE_TAGS` / `CK_EXCLUDE_TAGS`|Фильтр по тегам.|
+
+Пример: `CK_RUN_SUITE=s21_strlen CK_VERBOSITY=verbose ./test`.
+
+
+# Компоненты для организации тестов
 
 ```
 SRunner                 запускает и собирает результаты
@@ -64,475 +76,722 @@ SRunner                 запускает и собирает результа�
 | TCase    | `TCase *`                   | группа связанных тестов с общими фикстурами и таймаутом |
 | Suite    | `Suite *`                   | набор групп, обычно по модулю или функции               |
 | SRunner  | `SRunner *`                 | запускает наборы и собирает результат                   |
+Сборка снизу вверх: пишем тесты, кладём их в `TCase`, `TCase` в `Suite`, `Suite` в `SRunner`, запускаем и читаем результат.
 
-### Описание теста
+## Тест: `START_TEST` / `END_TEST`
 
 ```c
-START_TEST(test_strlen_basic) {
+START_TEST(strlen_1) {
   ck_assert_uint_eq(s21_strlen("hello"), strlen("hello"));
 }
 END_TEST
 ```
 
-Макрос разворачивается в `static void имя(int _i)`. Параметр `_i` нужен для циклических тестов.
+Это макросы. Они разворачиваются в `static void strlen_basic(int _i) { ... }`.
 
-### Сборка набора
+|Элемент|Назначение|
+|---|---|
+|`START_TEST(name)`|Объявляет тест с именем `name`. Это функция без возвращаемого значения.|
+|`END_TEST`|Закрывает функцию, обязателен.|
+|`_i`|Скрытый параметр `int`. Для обычных тестов не нужен, для циклических (`tcase_add_loop_test`) это текущий индекс.|
+
+Тест **проходит**, если дошёл до конца без сработавшего `ck_assert*`. Тест **падает**, если сработал `ck_assert*` или `ck_abort`, программа получила сигнал (SIGSEGV, SIGABRT), истёк таймаут или процесс завершился через `exit()` без ожидания этого.
+
+### Как прерывается тест
+
+Это зависит от режима запуска:
+
+- **`CK_FORK` (по умолчанию).** Для **каждого** теста Check делает `fork()`. Тест выполняется в дочернем процессе, а родитель ждёт и читает результат через канал (pipe). Если в тесте случился segfault, процесс умирает, родитель видит сигнал и записывает "тест упал по SIGSEGV", а остальные тесты продолжают выполняться.
+- **`CK_NOFORK`.** Всё в одном процессе, провал реализован через `longjmp`. Падение по сигналу убьёт всю программу.
+
+Из режима fork есть важное практическое следствие: **каждый тест работает с чистой копией памяти родителя**. Изменили глобальную переменную в одном тесте, в следующем она снова будет исходной. Тесты не могут влиять друг на друга через глобальное состояние, и утечка памяти в одном тесте не накапливается. Но и передать что-то от теста к тесту через глобальную переменную тоже нельзя.
+
+
+## `TCase`: группа тестов
+
+```c
+TCase *tc = tcase_create("core");   // имя группы, строка
+
+tcase_add_test(tc, strlen_1);
+tcase_add_test(tc, strlen_2);
+
+suite_add_tcase(s, tc);             // прикрепить группу к набору
+```
+
+`TCase` в памяти это структура, которая хранит:
+
+1. список тестов (адрес и имя каждого);
+2. параметры, общие для всех тестов группы: таймаут, фикстуры, теги;
+3. имя группы.
+
+>Освобождать `TCase` вручную не нужно: им владеет `Suite`, а `Suite` владеет `SRunner`. Вызов `srunner_free` очищает всю цепочку.
+
+
+```c
+// Пример деления на группы для s21_sprintf
+
+Suite *sprintf_suite(void) {
+  Suite *s = suite_create("s21_sprintf");
+
+  TCase *ints = tcase_create("integers");
+  tcase_add_test(ints, sprintf_d_positive);
+  tcase_add_test(ints, sprintf_d_negative);
+  tcase_add_test(ints, sprintf_d_width);
+
+  TCase *strs = tcase_create("strings");
+  tcase_add_test(strs, sprintf_s_basic);
+  tcase_add_test(strs, sprintf_s_precision);
+
+  TCase *errors = tcase_create("edge_cases");
+  tcase_add_test(errors, sprintf_null_format);
+  tcase_add_test(errors, sprintf_percent_at_end);
+
+  suite_add_tcase(s, ints);
+  suite_add_tcase(s, strs);
+  suite_add_tcase(s, errors);
+  return s;
+}
+```
+
+### Зачем нужны группы
+
+**1. Общая подготовка и очистка (фикстуры)**: Фикстура выполняется перед каждым тестом группы и после него.
+
+```c
+static char *buf;
+
+static void setup(void) {
+  buf = malloc(64);
+  memset(buf, 'X', 64);       // заполняем мусором, чтобы увидеть недописанный '\0'
+}
+
+static void teardown(void) {
+  free(buf);
+}
+
+Suite *strcpy_suite(void) {
+  Suite *s = suite_create("s21_strcpy");
+  TCase *tc = tcase_create("core");
+
+  tcase_add_checked_fixture(tc, setup, teardown);
+  tcase_add_test(tc, strcpy_basic);
+  tcase_add_test(tc, strcpy_empty);
+
+  suite_add_tcase(s, tc);
+  return s;
+}
+```
+
+Внутри тестов используется `buf` без повторного `malloc`. Без группы пришлось бы копировать выделение и очистку в начало и конец каждого теста. Переменные фикстуры должны быть глобальными или `static` на уровне файла, потому что `setup` не принимает параметров и ничего не возвращает: общаться с тестом ему больше не через что.
+
+
+**2. Разные настройки для разных видов тестов**: настройки привязаны к группе, а не к отдельному тесту. Если бы такой группировки не было, пришлось бы выбирать один таймаут для всего Suite.
+
+```c
+TCase *fast = tcase_create("fast");        // таймаут по умолчанию (4 с)
+
+TCase *heavy = tcase_create("big_buffers");
+tcase_set_timeout(heavy, 30);              // для тяжёлых тестов
+```
+
+
+**3. Выборочный запуск при отладке**
+
+```
+CK_RUN_CASE=big_buffers ./test
+```
+
+Запустятся только тесты группы с таким именем, во всех Suite. Для сравнения: `CK_RUN_SUITE` отбирает по набору. Когда у `s21_sprintf` 200 тестов, а отлаживаете вы только работу с флагами, такая выборка экономит время. Отдельный тест из группы запустить нельзя, это минимальная единица фильтрации, поэтому группы стоит делать по смыслу.
+
+
+**4. Читаемый отчёт**: в сообщении о провале есть имя группы. `s21_sprintf:flags:test_plus_flag` говорит больше, чем просто `test_plus_flag`.
+
+
+### Функции групп
+
+#### Макрос `tcase_add_test()`
+
+Добавляет обычный тест. Написать `START_TEST` недостаточно: функция сама никуда не регистрируется. Её нужно явно добавить в группу:
+
+```c
+tcase_add_test(tc, fn);
+```
+
+Макрос `tcase_add_test` берёт имя функции, превращает его в строку (через `#`) и сохраняет вместе с указателем.
+
+```c
+TCase* tc = tcase_create("core");
+
+tcase_add_test(tc, strlen_1);
+tcase_add_test(tc, strlen_2);
+tcase_add_test(tc, strlen_3);
+tcase_add_test(tc, strlen_4);
+```
+
+
+#### Макрос `tcase_add_loop_test()`
+
+```c
+tcase_add_loop_test(tc, fn, start, end)
+```
+
+Запускает тест в цикле для `_i = start ... end-1`. Каждая итерация это отдельный запуск.
+
+```c
+START_TEST(test_digits) {
+  char buf[2] = {'0' + _i, '\0'};
+  ck_assert_uint_eq(s21_strlen(buf), 1);
+}
+END_TEST
+
+tcase_add_loop_test(tc, test_digits, 0, 10);  // _i = 0..9
+```
+
+
+#### Функции для добавления фикстур
+
+```c
+void tcase_add_checked_fixture(TCase *tc, void (*setup)(void), void (*teardown)(void));
+
+void tcase_add_unchecked_fixture(TCase *tc, void (*setup)(void), void (*teardown)(void));
+```
+
+| Параметр                     | **checked**                                         | **unchecked**                                         |
+| ---------------------------- | --------------------------------------------------- | ----------------------------------------------------- |
+| Когда выполняется            | **перед и после каждого теста**                     | **один раз** для всего TCase                          |
+| Где выполняется              | в дочернем процессе вместе с тестом (в режиме fork) | в основном процессе                                   |
+| Если внутри упал `ck_assert` | считается ошибкой теста                             | не отслеживается, ломает весь запуск                  |
+| Типичное применение          | выделить и освободить буфер, подготовить структуру  | создать временный файл, инициализировать общий ресурс |
+
+
+#### `tcase_set_timeout()`
+
+
+```c
+void tcase_set_timeout(TCase *tc, double timeout)
+```
+
+Лимит времени на **каждый** тест. По умолчанию 4 секунды. `0` означает без лимита (в новых версиях).
+
+
+## `Suite`: набор групп тестов
+
+### Тип данных `Suite`
+
+В `check.h` это непрозрачный тип (opaque type). Само определение структуры спрятано внутри библиотеки. Поля вам недоступны, работать с `Suite` можно только через функции Check. Всегда используется указатель `Suite *`, объект создаётся в куче внутри библиотеки.
+
+Это **именованный упорядоченный список TCase**. Больше он ничего не хранит и ничего не делает. Сам тесты не запускает, настроек (таймаут, фикстуры) не имеет, их несёт `TCase`.
+
+#### Освобождение памяти
+
+Память Suite освобождает `srunner_free`, причём вместе со всеми его TCase и тестами. Отсюда два правила:
+
+1. Suite, не переданный ни в один `SRunner`, **утечёт**.
+2. Один и тот же `Suite` или `TCase` нельзя добавлять в два раннера или два набора: будет двойное освобождение.
+
+
+### Функции для работы с типом
+
+#### `suite_create`
+
+```c
+Suite *suite_create(const char *name);
+```
+
+- **Вход:** имя набора. Строка не копируется, поэтому передавайте литерал или строку, которая живёт дольше раннера.
+- **Выход:** новый пустой `Suite *`.
+- **Имя нужно для:**
+    - строки `Running suite(s): s21_strlen` в начале отчёта;
+    - фильтра `CK_RUN_SUITE=s21_strlen`;
+    - `srunner_run(sr, "s21_strlen", NULL, mode)`.
+
+
+#### `suite_add_tcase`
+
+```c
+void suite_add_tcase(Suite *s, TCase *tc);
+```
+
+- **Вход:** набор и группа тестов.
+- **Выход:** ничего.
+- Группа добавляется в конец списка. Порядок запуска равен порядку добавления. Тесты внутри `TCase` тоже идут в порядке добавления.
+
+
+### Функция-сборщик (builder)
 
 ```c
 Suite *strlen_suite(void) {
   Suite *s = suite_create("s21_strlen");
   TCase *tc = tcase_create("core");
 
-  tcase_add_test(tc, test_strlen_basic);
+  tcase_add_test(tc, strlen_1);
+  tcase_add_test(tc, strlen_2);
   suite_add_tcase(s, tc);
+
   return s;
 }
 ```
 
-### Запуск
+`START_TEST` разворачивается в **`static` функцию**. Из другого `.c` файла на тест сослаться нельзя. Значит, регистрировать тесты (`tcase_add_test`) обязан код **в том же файле**, где они написаны. Отсюда схема:
+
+```
+test_strlen.c   тесты (static) + strlen_suite()   ← регистрирует их у себя
+test_string.h   прототип: Suite *strlen_suite(void);
+test_string.c   main(): видит только сборщик, тесты ему не нужны
+```
+
+Сборщик это единственная "публичная" точка файла с тестами. Для `main` весь набор это просто вызов функции, возвращающей `Suite *`.
+
+#### Правила хорошего сборщика
+
+- Возвращает указатель, созданный через `suite_create`. Никогда не возвращайте указатель на локальную переменную.
+- Один сборщик, один Suite, одна тестируемая функция (или группа родственных).
+- Имя Suite делайте равным имени тестируемой функции (`"s21_strlen"`), так проще запускать выборочно и читать отчёт.
+- Новый TCase добавляйте только когда нужны **другие** настройки (таймаут, фикстуры).
+
+#### Типичный вариант с несколькими TCase
 
 ```c
-int main(void) {
-  Suite *s = strlen_suite();
-  SRunner *sr = srunner_create(s);
+Suite *sprintf_suite(void) {
+  Suite *s = suite_create("s21_sprintf");
 
-  srunner_run_all(sr, CK_NORMAL);
-  int failed = srunner_ntests_failed(sr);
-  srunner_free(sr);
+  TCase *tc_int = tcase_create("integers");
+  tcase_add_test(tc_int, sprintf_d_basic);
+  tcase_add_test(tc_int, sprintf_d_width);
 
-  return (failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
+  TCase *tc_big = tcase_create("big_input");
+  tcase_set_timeout(tc_big, 20);
+  tcase_add_test(tc_big, sprintf_long_string);
+
+  suite_add_tcase(s, tc_int);
+  suite_add_tcase(s, tc_big);
+  return s;
 }
 ```
 
-Код возврата важен: по нему `make` и CI понимают, прошли ли тесты.
 
-## Функции для организации тестов
-
-### Работа с Suite и TCase
-
-|Функция|Что делает|
-|---|---|
-|`suite_create(name)`|создаёт набор|
-|`tcase_create(name)`|создаёт группу тестов|
-|`suite_add_tcase(s, tc)`|добавляет группу в набор|
-|`tcase_add_test(tc, fn)`|добавляет тест в группу|
-|`tcase_add_loop_test(tc, fn, start, end)`|запускает тест в цикле для значений `_i` от `start` до `end - 1`|
-|`tcase_set_timeout(tc, sec)`|таймаут на каждый тест группы (по умолчанию небольшой, задаётся в секундах)|
-|`tcase_add_checked_fixture(tc, setup, teardown)`|setup и teardown перед и после **каждого** теста, внутри fork|
-|`tcase_add_unchecked_fixture(tc, setup, teardown)`|setup и teardown один раз на группу, вне fork|
-
-### Циклические тесты
-
-Позволяют прогнать один тест на наборе данных без копирования кода:
+## `SRunner`: запуск тестов
 
 ```c
-static const char *samples[] = {"", "a", "hello", "long string here"};
+#include "test_string.h"
 
-START_TEST(test_strlen_loop) {
-  ck_assert_uint_eq(s21_strlen(samples[_i]), strlen(samples[_i]));
+int main(void) {
+  Suite *suites[] = {strlen_suite(), strcpy_suite(), strcmp_suite()};
+  size_t n = sizeof(suites) / sizeof(suites[0]);
+
+  SRunner *sr = srunner_create(NULL);
+  for (size_t i = 0; i < n; i++) srunner_add_suite(sr, suites[i]);
+
+  srunner_set_log(sr, "test.log");     // до запуска
+  srunner_run_all(sr, CK_NORMAL);
+
+  int failed = srunner_ntests_failed(sr);
+  srunner_free(sr);                    // освободит и Suite'ы
+
+  return failed ? EXIT_FAILURE : EXIT_SUCCESS;
+}
+```
+
+### Тип данных `SRunner`
+
+`SRunner` (Suite Runner) нужен, чтобы **запускать** наборы тестов и **хранить результаты** прогона. Сами тесты, TCase и Suite только описывают, что проверять. Выполняет проверки и собирает итог раннер.
+
+```
+Suite ─┐
+Suite ─┼──► SRunner ──► запуск ──► результаты (счётчики, список TestResult, отчёты)
+Suite ─┘
+```
+
+**Жизненный цикл**
+
+```c
+SRunner *sr = srunner_create(first_suite);   // 1. создать
+srunner_add_suite(sr, second_suite);         // 2. добавить ещё Suite
+srunner_set_fork_status(sr, CK_NOFORK);      // 3. (опц.) настроить
+srunner_set_log(sr, "test.log");             //    (опц.) вести лог
+srunner_run_all(sr, CK_NORMAL);              // 4. запустить
+int failed = srunner_ntests_failed(sr);      // 5. прочитать результат
+srunner_free(sr);                            // 6. освободить
+```
+
+Настройки (fork, логи) нужно задавать **до** запуска, иначе они не подействуют.
+
+
+### Функции для работы с типом
+
+#### `srunner_create()`
+
+```c
+SRunner *sr(Suite *s);
+```
+
+Создаёт и возвращает `SRunner*`, принимает либо один `Suite*`, либо `NULL`. С `NULL` получится пустой раннер, Suite'ы добавляются потом в цикле:
+
+
+```c
+Suite* tests[] = {strlen_suite(), strcat_suite(), memchr_suite()};
+size_t items = sizeof(tests) / sizeof(tests[0]);
+
+SRunner* sr = srunner_create(NULL);
+for (size_t i = 0; i < items; i++) srunner_add_suite(sr, tests[i]);
+```
+
+
+#### `srunner_add_suite()`
+
+```c
+void srunner_add_suite(SRunner *sr, Suite *s);
+```
+
+Добавляет `Suite*` в `SRunner`. Можно вызывать сколько угодно раз. Suite'ы выполняются в порядке добавления.
+
+>`Suite` после передачи раннеру принадлежит ему. Отдельно `free` не нужен, иначе получится двойное освобождение.
+
+
+#### `srunner_run_all()`
+
+```c
+void srunner_run_all(SRunner *sr, enum print_output print_mode);
+```
+
+Запускает все тесты, добавленные в `SRunner`
+
+##### Режимы вывода
+
+|Константа|Поведение|
+|---|---|
+|`CK_SILENT`|Ничего не печатает. Результаты читаются программно.|
+|`CK_MINIMAL`|Только итоговая строка.|
+|`CK_NORMAL`|Итог и подробности по упавшим тестам. Лучший вариант по умолчанию.|
+|`CK_VERBOSE`|Строка по каждому тесту, включая успешные.|
+|`CK_ENV`|Режим берётся из переменной `CK_VERBOSITY` (`silent`, `minimal`, `normal`, `verbose`).|
+
+Итоговая строка:
+
+```
+100%: Checks: 4, Failures: 0, Errors: 0
+```
+
+Строка об ошибке имеет формат `файл:строка:тип:TCase:тест:итерация:сообщение`:
+
+```
+test_strlen.c:14:F:core:strlen_4:0: Assertion 's21_strlen(NULL) == 0' failed
+```
+
+Тип бывает таким:
+
+- **`F` (Failure)**: сработала проверка `ck_assert*` или `ck_abort`.
+- **`E` (Error)**: тест «сломался» иначе: сигнал (SIGSEGV, SIGABRT), таймаут, неожиданный `exit()`.
+
+
+#### `srunner_set_fork_status()`
+
+```c
+void srunner_set_fork_status(SRunner *sr, enum fork_status fstat);
+```
+
+|Константа|Поведение|
+|---|---|
+|`CK_FORK_GETENV`|Значение по умолчанию. Смотрит на переменную `CK_FORK`: `no` отключает fork, всё остальное включает.|
+|`CK_FORK`|Всегда fork: каждый тест в отдельном процессе.|
+|`CK_NOFORK`|Все тесты в одном процессе.|
+
+| Параметр                                              | **`CK_FORK`**                                 | **`CK_NOFORK`**               |
+| ----------------------------------------------------- | --------------------------------------------- | ----------------------------- |
+| Изоляция                                              | Падение теста не убивает прогон               | Segfault роняет всю программу |
+| Таймауты                                              | Работают                                      | Не работают                   |
+| `tcase_add_test_raise_signal`, `tcase_add_exit_value` | Работают                                      | Не работают                   |
+| Отладка в gdb                                         | Неудобно (нужно `set follow-fork-mode child`) | Удобно                        |
+| valgrind                                              | Шумно, много процессов                        | Чисто, нагляднее              |
+| Скорость                                              | Медленнее из-за `fork()` на каждый тест       | Быстрее                       |
+
+>Для обычного прогона и `make test` оставляйте `fork`, а для **gdb** и **valgrind** запускайте так: `CK_FORK=no ./test` (если `CK_FORK_GETENV`) или явно `CK_NOFORK`.
+
+
+#### Получение результатов
+
+##### `srunner_ntests_run()`
+
+```c
+int srunner_ntests_run(SRunner *sr);
+```
+
+Возвращает число выполненных тестов (циклические тесты считаются по итерациям).
+
+
+##### `srunner_ntests_failed()`
+
+```c
+int srunner_ntests_failed(SRunner *sr);
+```
+
+Возвращает число тестов с результатом `F` или `E`. Это значение идёт в код возврата
+
+
+#### `srunner_free()`
+
+```c
+void srunner_free(SRunner *sr);
+```
+
+Освобождает сам раннер, все его `Suite`, `TCase` и результаты. После `srunner_free` указатели на Suite, TCase и `TestResult*` недействительны. Результаты, прочитанные из раннера, нужно использовать до его освобождения.
+
+
+# Утверждения
+
+| Что проверяем                       | Макрос                               |
+| ----------------------------------- | ------------------------------------ |
+| Длина, количество (`size_t`)        | `ck_assert_uint_eq`                  |
+| Код возврата, `int`, `char`, `enum` | `ck_assert_int_eq`                   |
+| Знак результата `strcmp`/`memcmp`   | `ck_assert_int_eq(SIGN(a), SIGN(b))` |
+| Строка, не может быть `NULL`        | `ck_assert_str_eq`                   |
+| Строка, может быть `NULL`           | `ck_assert_pstr_eq`                  |
+| Адрес в исходной строке             | `ck_assert_ptr_eq`                   |
+| Результат `NULL` или нет            | `ck_assert_ptr_null` / `_nonnull`    |
+| Буфер, бинарные данные              | `ck_assert_mem_eq`                   |
+| `double` после вычислений           | `ck_assert_double_eq_tol`            |
+| `inf`/`nan`                         | `ck_assert_double_infinite` / `_nan` |
+| Сложное условие, свой текст         | `ck_assert_msg`                      |
+| Недостижимая ветка                  | `ck_abort_msg`                       |
+
+`ck_assert*` это **макросы**, а не функции. Каждый макрос делает три вещи:
+
+1. Вычисляет аргументы и сравнивает их.
+2. Если проверка не прошла, формирует сообщение (файл, строка, выражение, фактические значения).
+3. **Сразу прерывает текущий тест** и регистрирует его как упавший.
+
+Поэтому внутри одного теста выполняется только до первого неудачного assert. Остальные проверки после него уже не запустятся.
+
+```c
+START_TEST(example) {
+  ck_assert_int_eq(1, 1);   // прошёл, идём дальше
+  ck_assert_int_eq(2, 3);   // упал, тест закончился здесь
+  ck_assert_int_eq(4, 4);   // никогда не выполнится
 }
 END_TEST
-
-// в сборке набора:
-tcase_add_loop_test(tc, test_strlen_loop, 0, 4);
 ```
 
-При падении Check покажет, на каком значении `_i` это произошло.
 
-### Тесты на аварийное завершение
-
-Работают только в режиме fork:
-
-|Функция|Проверяет|
-|---|---|
-|`tcase_add_test_raise_signal(tc, fn, signal)`|что тест завершится с указанным сигналом, например `SIGSEGV`|
-|`tcase_add_exit_value(tc, fn, value)`|что процесс завершится с указанным кодом|
-
-### Фикстуры
-
-Фикстура это подготовка и очистка окружения теста: выделить память, создать файл, обнулить глобальные переменные.
+### Базовые проверки
 
 ```c
-static char *buf;
-
-static void setup(void) { buf = malloc(100); }
-static void teardown(void) { free(buf); }
-
-tcase_add_checked_fixture(tc, setup, teardown);
+ck_assert(expr);
+ck_assert_msg(expr, fmt, ...);
+ck_abort();
+ck_abort_msg(fmt, ...);
 ```
 
-Checked-фикстура выполняется в процессе теста, поэтому утечки и падения в ней тоже ловятся.
+|Макрос|Вход|Поведение|
+|---|---|---|
+|`ck_assert(expr)`|любое выражение, ненулевое считается истиной|падает, если `expr == 0`. Сообщение: `Assertion 'expr' failed`|
+|`ck_assert_msg(expr, fmt, ...)`|то же плюс формат в стиле `printf`|при падении печатает **ваше** сообщение вместо стандартного|
+|`ck_abort()`|ничего|безусловное падение (например, в ветке, куда код не должен попасть)|
+|`ck_abort_msg(fmt, ...)`|формат и аргументы|то же с сообщением|
 
-## Утверждения (assertions)
+Когда использовать `ck_assert_msg`: если стандартного сообщения мало, например внутри цикла по набору данных.
 
-Это основной инструмент: если условие ложно, тест помечается как проваленный и **немедленно завершается**.
+```c
+for (int i = 0; i < n; i++) {
+  ck_assert_msg(s21_strlen(cases[i]) == strlen(cases[i]),
+                "failed on case #%d: \"%s\"", i, cases[i]);
+}
+```
 
-### Универсальные
+Тут `ck_assert_uint_eq` показал бы только числа, а не то, на какой строке из набора сломалось.
 
-|Макрос|Назначение|
-|---|---|
-|`ck_assert(expr)`|выражение истинно|
-|`ck_assert_msg(expr, fmt, ...)`|то же, но с вашим сообщением в формате `printf`|
-|`ck_abort()`|безусловный провал|
-|`ck_abort_msg(fmt, ...)`|то же, с сообщением|
 
 ### Целые числа
 
-|Макрос|Тип|Операции|
-|---|---|---|
-|`ck_assert_int_*`|знаковые (`intmax_t`)|`eq`, `ne`, `lt`, `le`, `gt`, `ge`|
-|`ck_assert_uint_*`|беззнаковые (`uintmax_t`)|те же|
+Шаблон: `ck_assert_<тип>_<операция>(X, Y)`.
 
-Правило выбора: для `size_t` (результат `strlen`, `sizeof`) используйте `ck_assert_uint_eq`. Для `int` и `long` используйте `ck_assert_int_eq`. Иначе возможны неверные сравнения и странные значения в сообщении об ошибке.
+|Тип|Внутри приводится к|Использовать для|
+|---|---|---|
+|`int`|`intmax_t`|`int`, `char`, `short`, `long`, `enum`, результат `strcmp`|
+|`uint`|`uintmax_t`|`unsigned`, **`size_t`**, `uint8_t` и т.п.|
+
+|Операция|Условие|
+|---|---|
+|`_eq`|`X == Y`|
+|`_ne`|`X != Y`|
+|`_lt`|`X < Y`|
+|`_le`|`X <= Y`|
+|`_gt`|`X > Y`|
+|`_ge`|`X >= Y`|
+
+```c
+ck_assert_uint_eq(s21_strlen("abc"), 3);
+ck_assert_int_ne(s21_strncmp("a", "b", 1), 0);
+ck_assert_uint_lt(count, capacity);
+```
+
+
+>**Сравнение `strcmp`/`memcmp` с `s21_` версией напрямую**: стандарт гарантирует лишь знак результата, а не конкретное число. Одна реализация вернёт `-1`, другая `-98`. Поэтому сравнивайте знаки:
+
+```c
+#define SIGN(x) (((x) > 0) - ((x) < 0))
+ck_assert_int_eq(SIGN(s21_strcmp(a, b)), SIGN(strcmp(a, b)));
+```
+
+
+### Вещественные числа
+
+Типы: `float`, `double`, `ldouble` (long double). Появились в Check 0.11.
+
+#### Точное сравнение
+
+```c
+ck_assert_double_eq(X, Y);   // также _ne, _lt, _le, _gt, _ge
+```
+
+Это обычное `==` над `double`. Для результатов вычислений оно почти всегда **не подходит** из-за ошибок округления.
+
+#### Сравнение с допуском
+
+```c
+ck_assert_double_eq_tol(X, Y, T);   // |X - Y| <= T
+ck_assert_double_ne_tol(X, Y, T);   // |X - Y| >  T
+ck_assert_double_ge_tol(X, Y, T);   // X >= Y - T
+ck_assert_double_le_tol(X, Y, T);   // X <= Y + T
+```
+
+`T` это допустимая абсолютная погрешность. Для `float` и `long double` аналогично: `ck_assert_float_eq_tol`, `ck_assert_ldouble_eq_tol`.
+
+#### Проверка особых значений
+
+```c
+ck_assert_double_finite(X);     // не inf и не nan
+ck_assert_double_infinite(X);   // +inf или -inf
+ck_assert_double_nan(X);        // nan
+ck_assert_double_nonnan(X);     // не nan
+```
+
+Особенно полезно для `s21_sprintf`/`s21_sscanf` с `%f`, `%e`, `%g`: отдельные тесты на `inf` и `nan`.
+
+```c
+double x;
+s21_sscanf("3.14", "%lf", &x);
+ck_assert_double_eq_tol(x, 3.14, 1e-9);
+```
+
 
 ### Строки
 
-|Макрос|Назначение|
-|---|---|
-|`ck_assert_str_eq(a, b)`|строки равны (`strcmp == 0`)|
-|`ck_assert_str_ne(a, b)`|строки различаются|
-|`ck_assert_str_lt/le/gt/ge`|лексикографическое сравнение|
+```c
+ck_assert_str_eq(X, Y);   // также _ne, _lt, _le, _gt, _ge
+ck_assert_pstr_eq(X, Y);  // также _pstr_ne
+```
 
-Нельзя передавать `NULL`: поведение неопределённое, возможен segfault. Сообщение при провале красиво покажет обе строки.
+|Семейство|Сравнивает|`NULL`|
+|---|---|---|
+|`ck_assert_str_*`|как `strcmp`|**падает с ошибкой**, если любой аргумент `NULL`|
+|`ck_assert_pstr_*`|как `strcmp`, но «безопасно»|допускается: `NULL == NULL` истинно, `NULL` и непустая строка различны|
+
+Семейство `pstr_*` (pointer-safe) нужно именно для функций, которые могут вернуть `NULL`, например `s21_strstr`, `s21_strtok`, `s21_strpbrk`, `s21_strerror` при некорректном вводе:
+
+```c
+ck_assert_pstr_eq(s21_strstr("abc", "zzz"), strstr("abc", "zzz"));  // оба NULL
+```
+
+При падении Check печатает обе строки в кавычках, так что видны пробелы и пустые строки.
+
+**Чего `str_*` не делает:** не сравнивает по длине и не знает про `\0` внутри буфера. Для бинарных данных используйте `mem_*`.
+
 
 ### Указатели
 
-|Макрос|Назначение|
-|---|---|
-|`ck_assert_ptr_eq(a, b)`|указатели равны|
-|`ck_assert_ptr_ne(a, b)`|указатели различаются|
-|`ck_assert_ptr_null(p)`|указатель равен `NULL`|
-|`ck_assert_ptr_nonnull(p)`|указатель не `NULL`|
+```c
+ck_assert_ptr_eq(X, Y);      // адреса равны
+ck_assert_ptr_ne(X, Y);      // адреса различны
+ck_assert_ptr_null(X);       // X == NULL
+ck_assert_ptr_nonnull(X);    // X != NULL
+```
 
-Макросы `ck_assert_ptr_null` и `ck_assert_ptr_nonnull` появились в более новых версиях Check. На старых вместо них пишут `ck_assert_ptr_eq(p, NULL)`.
+Сравнивается **адрес**, а не содержимое. Идеально для функций, возвращающих указатель в исходную строку:
+
+```c
+const char *s = "hello world";
+ck_assert_ptr_eq(s21_strchr(s, 'w'), strchr(s, 'w'));
+ck_assert_ptr_null(s21_strchr(s, 'z'));
+```
+
+Тут важно, что оба вызова работают с **одним и тем же** `s`. Если передавать разные копии строки, адреса будут разными даже при правильной реализации.
+
 
 ### Память
 
-|Макрос|Назначение|
+```c
+ck_assert_mem_eq(X, Y, L);   // также _ne, _lt, _le, _gt, _ge
+```
+
+|Параметр|Смысл|
 |---|---|
-|`ck_assert_mem_eq(a, b, n)`|первые `n` байт совпадают (как `memcmp == 0`)|
-|`ck_assert_mem_ne(a, b, n)`|не совпадают|
-|`ck_assert_mem_lt/le/gt/ge`|сравнение по `memcmp`|
+|`X`, `Y`|указатели на блоки памяти|
+|`L`|сколько байт сравнивать (`size_t`)|
 
-Применяйте для проверки `memcpy`, `memset`, `memmove` и произвольных буферов, где нет нулевого терминатора.
-
-### Числа с плавающей точкой
-
-В новых версиях Check есть семейства `ck_assert_float_*`, `ck_assert_double_*`, `ck_assert_ldouble_*` с операциями `eq`, `ne`, `lt`, `le`, `gt`, `ge`. Для сравнения с допуском есть вариации `_tol`:
+Работает как `memcmp(X, Y, L)`. Применять для `memcpy`, `memmove`, `memset`, `memchr`, а также для проверки, что буфер после операции не затронут за пределами записи.
 
 ```c
-ck_assert_double_eq_tol(s21_value, expected, 1e-6);
+char dst1[10] = {0}, dst2[10] = {0};
+s21_memcpy(dst1, "abc", 4);
+memcpy(dst2, "abc", 4);
+ck_assert_mem_eq(dst1, dst2, sizeof(dst1));   // сравнили весь буфер, включая «хвост»
 ```
 
-Точное `eq` для вещественных почти всегда плохая идея из-за погрешностей. Для проверки `sprintf` и `sscanf` с `%f` используйте `_tol`.
+При падении Check печатает **hex-дамп** обоих блоков. Для коротких блоков это удобно.
 
-### Вспомогательные
+---
 
-|Макрос|Назначение|
-|---|---|
-|`mark_point()`|запоминает место в коде, чтобы при падении Check показал последнюю достигнутую точку|
-
-## Запуск и результаты
-
-### Режимы подробности вывода
-
-Передаются во второй аргумент `srunner_run_all`:
-
-|Константа|Что выводит|
-|---|---|
-|`CK_SILENT`|ничего|
-|`CK_MINIMAL`|только итоговую сводку|
-|`CK_NORMAL`|сводку и описание провалов|
-|`CK_VERBOSE`|сводку и строку по каждому тесту|
-|`CK_ENV`|берёт режим из переменной окружения `CK_VERBOSITY`|
-
-### Как читать вывод
-
-```
-100%: Checks: 12, Failures: 0, Errors: 0
-```
-
-или при проблемах:
-
-```
-tests.c:25:F:core:test_strlen_basic:0: Assertion 's21_strlen("hello") == 5' failed
-tests.c:40:E:core:test_memcpy:0: (after this point) Received signal 11 (Segmentation fault)
-```
-
-Формат: `файл:строка:тип:группа:тест:значение_i: сообщение`.
-
-- **F (Failure)**: утверждение не выполнилось. Ваша функция вернула не то.
-- **E (Error)**: тест аварийно завершился (сигнал, таймаут, неожиданный код выхода). Чаще всего это segfault или бесконечный цикл.
-
-### Полезные функции SRunner
-
-|Функция|Назначение|
-|---|---|
-|`srunner_create(suite)`|создаёт запускатор|
-|`srunner_add_suite(sr, s)`|добавляет ещё один набор|
-|`srunner_run_all(sr, mode)`|запускает всё|
-|`srunner_ntests_run(sr)`|сколько тестов запущено|
-|`srunner_ntests_failed(sr)`|сколько провалено|
-|`srunner_free(sr)`|освобождает ресурсы|
-|`srunner_set_fork_status(sr, CK_NOFORK)`|отключает fork|
-|`srunner_set_log(sr, "file.log")`|дублирует вывод в файл|
-|`srunner_set_xml(sr, "file.xml")`|отчёт в формате XML|
-|`srunner_set_tap(sr, "file.tap")`|отчёт в формате TAP|
-
-### Режим без fork
+### Метка `mark_point()`
 
 ```c
-srunner_set_fork_status(sr, CK_NOFORK);
+mark_point();
 ```
 
-или без изменения кода в **Makefile** просто задать переменную окружения. Тогда включение/отключением **fork** можно управлять снаружи (важно при этом не вызывать `srunner_set_fork_status()` в коде):
+Запоминает файл и строку. Если тест позже упадёт **сигналом** (SIGSEGV) или по таймауту, то в отчёте будет указана последняя пройденная метка. Без неё Check показывает только «тест упал по сигналу» без строки.
 
 ```c
-int main(void) {
-  SRunner *sr = srunner_create(my_suite());
-  srunner_run_all(sr, CK_NORMAL);
-  int failed = srunner_ntests_failed(sr);
-  srunner_free(sr);
-  return failed == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
-}
-```
-
-```Makefile
-CC = gcc
-CFLAGS = -Wall -Werror -Wextra -std=c11
-CHECK_LIBS = $(shell pkg-config --cflags --libs check)
-
-test: s21_string.a tests.o
-	$(CC) tests.o s21_string.a -o test $(CHECK_LIBS)
-	./test
-
-valgrind: test
-	CK_FORK=no valgrind --leak-check=full --error-exitcode=1 ./test
-```
-
-```bash
-make test        # обычный запуск, fork включён
-make valgrind    # без fork, под valgrind
-```
-
-Когда нужен:
-- отладка в `gdb`;
-- запуск под `valgrind` (проверка утечек и чтения за границами);
-- диагностика, если fork мешает чему-то в окружении.
-
-В этом режиме тесты на сигналы не работают, а падение одного теста убивает весь процесс. Если после правок `make valgrind` всё равно работает с fork, проверьте, что в коде нет `srunner_set_fork_status(sr, CK_FORK)`: явный вызов в коде перекрывает переменную окружения.
-
-## Пример организации большого проекта
-
-### Один файл на модуль
-
-Обычно структура такая: по файлу на группу функций (`test_strlen.c`, `test_memcpy.c`, ...), в каждом функция `Suite *..._suite(void)`, и общий `main`:
-
-```c
-// tests.h
-#ifndef TESTS_H_
-#define TESTS_H_
-#include <check.h>
-
-Suite *strlen_suite(void);
-Suite *memcpy_suite(void);
-
-#endif  // TESTS_H_
-```
-
-```c
-// tests.c
-#include <stdlib.h>
-#include "tests.h"
-
-int main(void) {
-  int failed = 0;
-  Suite *suites[] = {strlen_suite(), memcpy_suite(), NULL};
-
-  for (int i = 0; suites[i] != NULL; i++) {
-    SRunner *sr = srunner_create(suites[i]);
-    srunner_set_fork_status(sr, CK_FORK);
-    srunner_run_all(sr, CK_NORMAL);
-    failed += srunner_ntests_failed(sr);
-    srunner_free(sr);
-  }
-  return (failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
-}
-```
-
-### Сравнение со стандартной библиотекой
-
-Приём для проекта со своей `string.h`: каждый тест сравнивает результат вашей функции с эталоном.
-
-```c
-START_TEST(test_strncmp_cmp) {
-  const char *a = "abcd";
-  const char *b = "abce";
-  int mine = s21_strncmp(a, b, 4);
-  int ref = strncmp(a, b, 4);
-  // знак результата, а не точное значение: стандарт не гарантирует конкретное число
-  ck_assert_int_eq((mine > 0) - (mine < 0), (ref > 0) - (ref < 0));
+START_TEST(crash_hunt) {
+  mark_point();
+  s21_function_a();
+  mark_point();
+  s21_function_b();    // если упадёт здесь, в отчёте будет строка второй метки
 }
 END_TEST
 ```
 
-Важная деталь: для функций сравнения (`strcmp`, `memcmp`) стандарт требует только знак результата, поэтому сравнивайте знаки.
+Метки работают только в режиме `CK_FORK`.
 
-## Покрытие кода: gcov
+---
 
-### Как связано с Check
+### Где можно вызывать `ck_assert`
 
-Check отвечает на вопрос «**проходят ли тесты**». Gcov отвечает на вопрос «**какая часть кода вообще выполнялась тестами**». Это разные инструменты, но в связке они дают полную картину: зелёные тесты при покрытии в тридцать процентов почти ничего не доказывают.
-
-Gcov это часть GCC. Он работает по двум видам служебных файлов.
-
-### Как это работает
-
-|Файл|Когда появляется|Что хранит|
-|---|---|---|
-|`.gcno`|при **компиляции** с флагами покрытия|структура программы: блоки, ветки, строки|
-|`.gcda`|при **запуске** программы|счётчики: сколько раз выполнился каждый блок|
-
-Затем `gcov` читает оба файла и показывает, какие строки и ветки были выполнены.
-
-### Флаги компиляции
-
-```bash
-gcc --coverage -O0 -g -c s21_string.c -o s21_string.o
-```
-
-- `--coverage` включает `-fprofile-arcs -ftest-coverage` при компиляции и подключает нужную библиотеку при линковке;
-- `-O0` отключает оптимизации: иначе компилятор перестраивает код и сопоставление со строками становится неточным;
-- `-g` добавляет отладочную информацию.
-
-Флаги покрытия нужны **только при сборке тестируемой библиотеки**. Если собрать с ними и сами тесты, то в отчёт попадёт код тестов, и процент искусственно вырастет.
-
-Линковка тоже с `--coverage`:
-
-```bash
-gcc --coverage tests.o s21_string.o -o test $(pkg-config --libs check)
-```
-
-### Получение отчёта
-
-Запустите тесты, после этого появятся `.gcda`:
-
-```bash
-./test
-gcov s21_string.c
-```
-
-Результат это файл `s21_string.c.gcov`, где у каждой строки указан счётчик выполнений. Строки с `#####` ни разу не выполнялись.
-
-Полезные ключи `gcov`:
-
-|Ключ|Эффект|
+|Место|Можно?|
 |---|---|
-|`-b`|добавляет статистику по ветвям (`if`, `?:`, циклы)|
-|`-c`|абсолютные счётчики вместо процентов для ветвей|
+|Тело `START_TEST`|да|
+|Вспомогательная функция, вызванная из теста|да (в той же ветке выполнения)|
+|`checked` фикстура (`setup`/`teardown`)|да|
+|`unchecked` фикстура|нет, сломает весь запуск|
+|`main` вне раннера|нет|
+|Другой поток (`pthread`)|нет, не потокобезопасно|
 
-### HTML-отчёт через lcov
+Особенности режимов:
 
-Для наглядности используют `lcov` и `genhtml`:
+- **`CK_FORK`** (по умолчанию): после падения процесс теста завершается. Память, которую тест не успел освободить, ушла вместе с процессом. Valgrind при этом показывает утечки только в упавших тестах.
+- **`CK_NOFORK`**: прерывание делается через `longjmp`, **освобождающий код после assert не выполняется**. Утечки вы увидите из-за самого факта падения.
 
-```bash
-lcov -t "s21_string" -o test.info -c -d .
-genhtml -o report test.info
-```
-
-- `-c` собирает данные покрытия;
-- `-d .` каталог с `.gcda` и `.gcno`;
-- `genhtml` строит HTML-страницы, которые открываются в браузере (`report/index.html`).
-
-Для учёта ветвей в новых версиях `lcov` добавляют `--rc branch_coverage=1`, в старых `--rc lcov_branch_coverage=1`.
-
-### Типичные цели Makefile
-
-```make
-CC = gcc
-CFLAGS = -Wall -Werror -Wextra -std=c11
-CHECK_LIBS = $(shell pkg-config --cflags --libs check)
-
-test: s21_string.a tests.o
-	$(CC) tests.o s21_string.a -o test $(CHECK_LIBS)
-	./test
-
-gcov_report: clean
-	$(CC) $(CFLAGS) --coverage -O0 -g -c s21_string.c -o s21_string.o
-	$(CC) $(CFLAGS) -c tests.c -o tests.o
-	$(CC) --coverage tests.o s21_string.o -o test $(CHECK_LIBS)
-	./test
-	lcov -t "s21_string" -o test.info -c -d .
-	genhtml -o report test.info
-
-clean:
-	rm -rf *.o *.a *.gcda *.gcno *.gcov *.info report test
-```
-
-Обратите внимание на `clean` перед `gcov_report`: старые `.gcda` от другой сборки дают ошибки вроде «profiling: ... mismatch» или искажённые цифры.
-
-### Частые проблемы с gcov
-
-- **Нулевое покрытие или пустой отчёт.** Тесты не запускались, либо `.gcda` лежат в другом каталоге, либо библиотека собрана без `--coverage`.
-- **Предупреждения о несоответствии версий.** Остались старые `.gcda` или `.gcno` после перекомпиляции. Решение: `make clean`.
-- **Покрытие в режиме fork.** Как правило, работает без проблем: дочерние процессы Check завершаются штатно, и счётчики записываются. Если данные теряются, попробуйте `CK_FORK=no`.
-- **Низкое покрытие веток при высоком покрытии строк.** Тесты не проверяют обе стороны условий. Добавляйте тесты на граничные случаи: пустая строка, `NULL`, нулевой размер, максимальные значения.
-- **Покрытие тестов в отчёте.** Флаги `--coverage` попали в компиляцию тестов. Либо уберите их оттуда, либо отфильтруйте: `lcov --remove test.info '*tests*' -o test.info`.
-
-### Что считать хорошим покрытием
-
-Процент покрытия измеряет только факт выполнения строки, а не правильность проверки. Строка может быть «покрыта» вызовом без единого `ck_assert`. Ориентир: стремиться к высокому покрытию строк и ветвей, но главным критерием считать осмысленные проверки, особенно граничные случаи.
-
-## Краткая шпаргалка
-
-### Минимальный шаблон
+Практическое правило: если в тесте есть `malloc`, то лучше освободить память **до** assert или хранить буферы в checked-фикстуре, чтобы `teardown` выполнился даже при падении:
 
 ```c
-#include <check.h>
-#include <stdlib.h>
+// плохо: при падении free не вызовется
+char *r = s21_insert("abc", "X", 1);
+ck_assert_str_eq(r, "aXbc");
+free(r);
 
-START_TEST(test_name) {
-  ck_assert_int_eq(1 + 1, 2);
-}
-END_TEST
-
-Suite *my_suite(void) {
-  Suite *s = suite_create("my");
-  TCase *tc = tcase_create("core");
-  tcase_add_test(tc, test_name);
-  suite_add_tcase(s, tc);
-  return s;
-}
-
-int main(void) {
-  SRunner *sr = srunner_create(my_suite());
-  srunner_run_all(sr, CK_NORMAL);
-  int failed = srunner_ntests_failed(sr);
-  srunner_free(sr);
-  return failed == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
-}
+// лучше: сначала сохраняем результат сравнения, потом освобождаем, потом assert
+char *r = s21_insert("abc", "X", 1);
+int ok = (r != NULL && strcmp(r, "aXbc") == 0);
+free(r);
+ck_assert(ok);
 ```
 
-### Что выбрать для проверки
-
-|Что сравниваем|Макрос|
-|---|---|
-|`int`, `long`|`ck_assert_int_eq`|
-|`size_t`, `unsigned`|`ck_assert_uint_eq`|
-|строки|`ck_assert_str_eq`|
-|буферы, массивы|`ck_assert_mem_eq`|
-|указатели|`ck_assert_ptr_eq`|
-|`double`, `float`|`ck_assert_double_eq_tol`|
-|произвольное условие|`ck_assert` или `ck_assert_msg`|
-
-### Команды для проверки качества
-
-|Цель|Команда|
-|---|---|
-|запуск тестов|`./test`|
-|отладка без fork|`CK_FORK=no gdb ./test`|
-|утечки памяти|`CK_FORK=no valgrind --leak-check=full ./test`|
-|покрытие по строкам|`gcov s21_string.c`|
-|HTML-отчёт|`lcov -c -d . -o test.info && genhtml -o report test.info`|
-
-Могу оформить этот конспект отдельным документом, чтобы его было удобно хранить и экспортировать, либо расширить какой-то раздел, например примерами тестов для конкретных функций `string.h` или `sprintf`.
+Для `s21_to_upper`, `s21_insert`, `s21_trim` это актуально.
