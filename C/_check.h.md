@@ -355,6 +355,26 @@ Suite *sprintf_suite(void) {
 
 ## `SRunner`: запуск тестов
 
+```c
+#include "test_string.h"
+
+int main(void) {
+  Suite *suites[] = {strlen_suite(), strcpy_suite(), strcmp_suite()};
+  size_t n = sizeof(suites) / sizeof(suites[0]);
+
+  SRunner *sr = srunner_create(NULL);
+  for (size_t i = 0; i < n; i++) srunner_add_suite(sr, suites[i]);
+
+  srunner_set_log(sr, "test.log");     // до запуска
+  srunner_run_all(sr, CK_NORMAL);
+
+  int failed = srunner_ntests_failed(sr);
+  srunner_free(sr);                    // освободит и Suite'ы
+
+  return failed ? EXIT_FAILURE : EXIT_SUCCESS;
+}
+```
+
 ### Тип данных `SRunner`
 
 `SRunner` (Suite Runner) нужен, чтобы **запускать** наборы тестов и **хранить результаты** прогона. Сами тесты, TCase и Suite только описывают, что проверять. Выполняет проверки и собирает итог раннер.
@@ -473,11 +493,23 @@ void srunner_set_fork_status(SRunner *sr, enum fork_status fstat);
 
 #### Получение результатов
 
+##### `srunner_ntests_run()`
 
 ```c
 int srunner_ntests_run(SRunner *sr);
+```
+
+Возвращает число выполненных тестов (циклические тесты считаются по итерациям).
+
+
+##### `srunner_ntests_failed()`
+
+```c
 int srunner_ntests_failed(SRunner *sr);
 ```
+
+Возвращает число тестов с результатом `F` или `E`. Это значение идёт в код возврата
+
 
 #### `srunner_free()`
 
