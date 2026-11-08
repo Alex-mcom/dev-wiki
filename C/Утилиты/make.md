@@ -660,3 +660,33 @@ re: clean all
 
 -include $(DEPS)
 ```
+
+### Сборка и подключение статической библиотеки
+
+```makefile
+CC 	    = gcc
+CFLAGS  = -std=c11 -Wall -Wextra -g -MMD -MP
+
+AR      = ar
+ARFLAGS = rcs
+
+SRCS    = $(wildcard s21_*.c)
+OBJS    = $(SRCS:%.c=%.o)
+DEPS    = $(OBJS:%.o=%.d)
+
+LIB     = s21_string.a
+
+.PHONY: all clean
+
+all: clean $(LIB)
+
+# s21_*.o -> s21_string.a
+$(LIB): $(OBJS)
+	$(AR) $(ARFLAGS) $@ $^
+
+%.o:%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(OBJS) $(LIB)
+```
