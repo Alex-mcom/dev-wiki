@@ -107,12 +107,93 @@ suite_add_tcase(s, tc);             // прикрепить группу к на
 2. параметры, общие для всех тестов группы: таймаут, фикстуры, теги;
 3. имя группы.
 
-Группа без тестов бессмысленна, но допустима. Освобождать `TCase` вручную не нужно: им владеет `Suite`, а `Suite` владеет `SRunner`. Вызов `srunner_free` очищает всю цепочку.
+>Освобождать `TCase` вручную не нужно: им владеет `Suite`, а `Suite` владеет `SRunner`. Вызов `srunner_free` очищает всю цепочку.
 
 Написать `START_TEST` недостаточно: функция сама никуда не регистрируется. Её нужно явно добавить в группу:
 
 ```c
-tcase_add_test(tc, strlen_1);
+tcase_add_test(tc, fn);
 ```
 
 Макрос `tcase_add_test` берёт имя функции, превращает его в строку (через `#`) и сохраняет вместе с указателем.
+
+
+```c
+// Пример деления на группы для s21_sprintf
+
+Suite *sprintf_suite(void) {
+  Suite *s = suite_create("s21_sprintf");
+
+  TCase *ints = tcase_create("integers");
+  tcase_add_test(ints, sprintf_d_positive);
+  tcase_add_test(ints, sprintf_d_negative);
+  tcase_add_test(ints, sprintf_d_width);
+
+  TCase *strs = tcase_create("strings");
+  tcase_add_test(strs, sprintf_s_basic);
+  tcase_add_test(strs, sprintf_s_precision);
+
+  TCase *errors = tcase_create("edge_cases");
+  tcase_add_test(errors, sprintf_null_format);
+  tcase_add_test(errors, sprintf_percent_at_end);
+
+  suite_add_tcase(s, ints);
+  suite_add_tcase(s, strs);
+  suite_add_tcase(s, errors);
+  return s;
+}
+```
+
+#### Зачем нужны группы
+
+**1. Общая подготовка и очистка (фикстуры)**: Фикстура выполняется перед каждым тестом группы и после него.
+
+```c
+static char *buf;
+
+static void setup(void) {
+  buf = malloc(64);
+  memset(buf, 'X', 64);       // заполняем мусором, чтобы увидеть недописанный '\0'
+}
+
+static void teardown(void) {
+  free(buf);
+}
+
+Suite *strcpy_suite(void) {
+  Suite *s = suite_create("s21_strcpy");
+  TCase *tc = tcase_create("core");
+
+  tcase_add_checked_fixture(tc, setup, teardown);
+  tcase_add_test(tc, strcpy_basic);
+  tcase_add_test(tc, strcpy_empty);
+
+  suite_add_tcase(s, tc);
+  return s;
+}
+```
+
+Внутри тестов используется `buf` без повторного `malloc`. Без группы пришлось бы копировать выделение и очистку в начало и конец каждого теста. Переменные фикстуры должны быть глобальными или `static` на уровне файла, потому что `setup` не принимает параметров и ничего не возвращает: общаться с тестом ему больше не через что.
+
+
+**2. Разные настройки для разных видов тестов**: настройки привязаны к группе, а не к отдельному тесту. Если бы такой группировки не было, пришлось бы выбирать один таймаут для всего Suite.
+
+```c
+TCase *fast = tcase_create("fast");        // таймаут по умолчанию (4 с)
+
+TCase *heavy = tcase_create("big_buffers");
+tcase_set_timeout(heavy, 30);              // для тяжёлых тестов
+```
+
+
+**3. Выборочный запуск при отладке**
+
+```
+CK_RUN_CASE=big_buffers ./test
+```
+
+Запустятся только тесты группы с таким именем, во всех Suite. Для сравнения: `CK_RUN_SUITE` отбирает по набору. Когда у `s21_sprintf` 200 тестов, а отлаживаете вы только работу с флагами, такая выборка экономит время. Отдельный тест из группы запустить нельзя, это минимальная единица фильтрации, поэтому группы стоит делать по смыслу.
+
+
+**4. Читаемый отчёт**: в сообщении о провале есть имя группы. `s21_sprintf:flags:test_plus_flag` говорит больше, чем просто `test_plus_flag`.
+
