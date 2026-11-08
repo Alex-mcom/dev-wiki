@@ -357,4 +357,59 @@ Suite *sprintf_suite(void) {
 
 ### Тип данных `SRunner`
 
-Тип `SRunner*`. Хранит Suite'ы, запускает их и накапливает результаты.
+`SRunner` (Suite Runner) нужен, чтобы **запускать** наборы тестов и **хранить результаты** прогона. Сами тесты, TCase и Suite только описывают, что проверять. Выполняет проверки и собирает итог раннер.
+
+```
+Suite ─┐
+Suite ─┼──► SRunner ──► запуск ──► результаты (счётчики, список TestResult, отчёты)
+Suite ─┘
+```
+
+**Жизненный цикл**
+
+```c
+SRunner *sr = srunner_create(first_suite);   // 1. создать
+srunner_add_suite(sr, second_suite);         // 2. добавить ещё Suite
+srunner_set_fork_status(sr, CK_NOFORK);      // 3. (опц.) настроить
+srunner_set_log(sr, "test.log");             //    (опц.) вести лог
+srunner_run_all(sr, CK_NORMAL);              // 4. запустить
+int failed = srunner_ntests_failed(sr);      // 5. прочитать результат
+srunner_free(sr);                            // 6. освободить
+```
+
+Настройки (fork, логи) нужно задавать **до** запуска, иначе они не подействуют.
+
+
+### Функции для работы с типом
+
+#### `srunner_create()`
+
+```c
+SRunner *sr(Suite *s);
+```
+
+Создаёт и возвращает `SRunner*`, принимает либо один `Suite*`, либо `NULL`. С `NULL` получится пустой раннер, Suite'ы добавляются потом в цикле:
+
+
+```c
+Suite* tests[] = {strlen_suite(), strcat_suite(), memchr_suite()};
+size_t items = sizeof(tests) / sizeof(tests[0]);
+
+SRunner* sr = srunner_create(NULL);
+for (size_t i = 0; i < items; i++) srunner_add_suite(sr, tests[i]);
+```
+
+
+#### `srunner_add_suite()`
+
+```c
+void srunner_add_suite(SRunner *sr, Suite *s);
+```
+
+Добавляет `Suite*` в `SRunner`. Можно вызывать сколько угодно раз. Suite'ы выполняются в порядке добавления.
+
+
+#### `srunner_free()`
+
+
+
