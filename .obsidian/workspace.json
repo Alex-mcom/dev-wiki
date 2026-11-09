@@ -78,8 +78,7 @@
               "title": "string.h"
             }
           }
-        ],
-        "currentTab": 2
+        ]
       },
       {
         "id": "d303775a0479071b",
@@ -92,7 +91,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/Утилиты/make.md",
+                "file": "C/Утилиты/_gcov.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -256,8 +255,9 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "6d6d4750014f59a5",
+  "active": "dc81a8c9e70df185",
   "lastOpenFiles": [
+    "C/Утилиты/make.md",
     "C/check.h.md",
     "Методология.md",
     "_cat.md",
@@ -267,7 +267,6 @@
     "projects/C3/s21_string.md",
     "C/Утилиты/_gcov.md",
     "C/Утилиты/gcc.md",
-    "C/Утилиты/make.md",
     "C/Утилиты/lldb.md",
     "_docker.md",
     "C/string.h.md",
