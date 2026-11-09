@@ -79,7 +79,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 2
       },
       {
         "id": "d303775a0479071b",
@@ -92,7 +92,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/Операции и операторы.md",
+                "file": "projects/C3/string.h.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -256,8 +256,9 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "fe5221ac86d39929",
+  "active": "16afea01b5292d8f",
   "lastOpenFiles": [
+    "C/Операции и операторы.md",
     "projects/C3/string.h.md",
     "C/string.h.md",
     "C/Утилиты/make.md",
@@ -276,7 +277,6 @@
     "C/Указатели.md",
     "projects/C3",
     "C/Сборка программы.md",
-    "C/Операции и операторы.md",
     "C/stdio.h.md",
     "C/Типы данных.md",
     "C/Утилиты",
