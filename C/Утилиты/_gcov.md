@@ -54,6 +54,8 @@ $(CC) $(CFLAGS) --coverage -O0 -c $(SRCS)
 
 ## `gcov`
 
+Обычно gcov не используется напрямую и отдельные флаги для неё не указываются. Чаще всего его вызывает `lcov` сразу для всех объектных файлов и упаковывает отчёт в один `report.info`
+
 ```bash
 gcc --coverage -O0 -g -c foo.c -o foo.o    # создаст foo.gcno
 gcc --coverage foo.o main.o -o app         # линковка с --coverage
@@ -100,32 +102,10 @@ Creating 'foo.c.gcov'
 |`-j`, `--json-format`|Вывод в JSON (gcov ≥ 9).|
 |`-i`, `--stdout` + `--json-format`|Промежуточный формат (в новых версиях).|
 
-Пример с ветками:
 
-bash
+## `lcov`
 
-```bash
-gcov -b -c foo.c
-```
-
-```
-Lines executed:85.71% of 14
-Branches executed:100.00% of 4
-Taken at least once:75.00% of 4
-```
-
-- **Branches executed**: сколько условных переходов вообще были достигнуты.
-- **Taken at least once**: сколько веток хотя бы раз были выбраны.
-
-Branch coverage в C включает «скрытые» ветки: короткие вычисления в `&&` и `||`, проверки внутри макросов, иногда вызовы функций. Поэтому 100% по веткам получить сложнее, чем по строкам.
-
-### 4. lcov
-
-lcov запускает gcov по всем объектникам проекта и собирает результат в один файл.
-
-#### Типовой сценарий
-
-bash
+Обёртка над `gcov`. Запускает `gcov` по всем объектникам проекта и собирает данные по всему проекту в один файл-трейс (`.info`), умеет фильтровать, складывать и сбрасывать.
 
 ```bash
 lcov --capture --directory . --output-file coverage.info
@@ -133,7 +113,8 @@ lcov --capture --directory . --output-file coverage.info
 
 Сокращённо: `lcov -c -d . -o coverage.info`.
 
-#### Основные опции
+
+### Основные опции
 
 |Опция|Смысл|
 |---|---|
@@ -157,11 +138,14 @@ lcov --capture --directory . --output-file coverage.info
 
 Версии lcov 1.x и 2.x отличаются по опциям и по строгости к ошибкам, поэтому смотрите `lcov --version` и `man lcov`.
 
-#### Фильтрация
+```c
+lcov --gcov-tool $(GCOV) --branch-coverage -t "s21_string" -o report.info -c -d .
+```
 
-Убираем из отчёта тесты и системные заголовки:
 
-bash
+### Фильтрация
+
+**Убираем из отчёта тесты и системные заголовки:**
 
 ```bash
 lcov --remove coverage.info '/usr/*' '*/tests/*' '*test*' \
@@ -170,15 +154,15 @@ lcov --remove coverage.info '/usr/*' '*/tests/*' '*test*' \
 
 Паттерны это glob-маски. Их нужно брать в одинарные кавычки, чтобы shell не раскрыл их заранее.
 
-Оставить только нужное:
 
-bash
+**Оставить только нужное:**
 
 ```bash
 lcov --extract coverage.info '*/src/*' -o coverage.src.info
 ```
 
-#### Формат tracefile (`.info`)
+
+### Формат tracefile (`.info`)
 
 ```
 TN:                      # имя теста
@@ -196,11 +180,10 @@ LH:12                    # строк выполнено
 end_of_record
 ```
 
-#### Baseline-трюк
+
+### Baseline-трюк
 
 Если тесты вообще не затронули какой-то файл, он не попадёт в отчёт, и покрытие выглядит лучше, чем есть. Решение:
-
-bash
 
 ```bash
 lcov -c -i -d . -o base.info        # до запуска тестов: нулевое покрытие
@@ -209,9 +192,10 @@ lcov -c -d . -o test.info           # после тестов
 lcov -a base.info -a test.info -o coverage.info
 ```
 
-### 5. genhtml
 
-bash
+## `genhtml`
+
+Входит в пакет `lcov`. Превращает `.info` в HTML-отчёт с подсветкой кода
 
 ```bash
 genhtml coverage.info --output-directory report
