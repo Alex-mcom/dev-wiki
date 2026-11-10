@@ -79,6 +79,20 @@
             }
           },
           {
+            "id": "06a4b144740a555b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "C/Утилиты/make.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "make"
+            }
+          },
+          {
             "id": "e9e430ed22993dbf",
             "type": "leaf",
             "state": {
@@ -93,7 +107,7 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 5
       },
       {
         "id": "d303775a0479071b",
@@ -106,7 +120,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "projects/C3/string.h.md",
+                "file": "C/Утилиты/make.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -270,10 +284,10 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "16afea01b5292d8f",
+  "active": "06a4b144740a555b",
   "lastOpenFiles": [
-    "C/string.h.md",
     "projects/C3/string.h.md",
+    "C/string.h.md",
     "C/Типы данных.md",
     "C/stdio.h.md",
     "C/Указатели.md",
