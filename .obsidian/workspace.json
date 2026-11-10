@@ -93,7 +93,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       },
       {
         "id": "d303775a0479071b",
@@ -106,7 +106,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/Типы данных.md",
+                "file": "projects/C3/string.h.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -270,15 +270,16 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "c6a52850a1c8da7a",
+  "active": "16afea01b5292d8f",
   "lastOpenFiles": [
+    "C/string.h.md",
+    "projects/C3/string.h.md",
+    "C/Типы данных.md",
     "C/stdio.h.md",
     "C/Указатели.md",
-    "projects/C3/string.h.md",
     "projects/C2_SimpleBashUtils/grep.md",
     "C/regex.h.md",
     "C/check.h.md",
-    "C/string.h.md",
     "C/Операции и операторы.md",
     "C/Утилиты/gcov.md",
     "C/Системы счисления.md",
@@ -294,7 +295,6 @@
     "C/Аргументы командной строки.md",
     "projects/C3",
     "C/Сборка программы.md",
-    "C/Типы данных.md",
     "C/Утилиты",
     "projects/C2_SimpleBashUtils/cat.md",
     "C/Работа с файлами.md",
