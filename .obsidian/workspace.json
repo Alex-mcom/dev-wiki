@@ -107,7 +107,7 @@
             }
           }
         ],
-        "currentTab": 5
+        "currentTab": 1
       },
       {
         "id": "d303775a0479071b",
@@ -120,7 +120,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/Утилиты/make.md",
+                "file": "C/Указатели.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -284,8 +284,9 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "06a4b144740a555b",
+  "active": "52ac285b3d1bd72f",
   "lastOpenFiles": [
+    "C/Утилиты/make.md",
     "projects/C3/string.h.md",
     "C/string.h.md",
     "C/Типы данных.md",
@@ -297,7 +298,6 @@
     "C/Операции и операторы.md",
     "C/Утилиты/gcov.md",
     "C/Системы счисления.md",
-    "C/Утилиты/make.md",
     "Методология.md",
     "_cat.md",
     "_Структурный подход.md",
