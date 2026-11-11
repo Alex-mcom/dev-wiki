@@ -37,20 +37,6 @@
             }
           },
           {
-            "id": "014effc17c083233",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "C/stdio.h.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "stdio.h"
-            }
-          },
-          {
             "id": "16afea01b5292d8f",
             "type": "leaf",
             "state": {
@@ -62,20 +48,6 @@
               },
               "icon": "lucide-file",
               "title": "string.h"
-            }
-          },
-          {
-            "id": "06a4b144740a555b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "C/Утилиты/make.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "make"
             }
           },
           {
@@ -92,8 +64,7 @@
               "title": "string.h"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       },
       {
         "id": "d303775a0479071b",
@@ -106,7 +77,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/Указатели.md",
+                "file": "C/check.h.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -270,11 +241,11 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "52ac285b3d1bd72f",
+  "active": "12070dcea43e950e",
   "lastOpenFiles": [
+    "C/Указатели.md",
     "projects/C3/string.h.md",
     "C/Типы данных.md",
-    "C/Указатели.md",
     "C/Утилиты/make.md",
     "C/string.h.md",
     "C/stdio.h.md",
