@@ -50,7 +50,8 @@
               "title": "string.h"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       },
       {
         "id": "d303775a0479071b",
@@ -63,7 +64,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/check.h.md",
+                "file": "C/string.h.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -227,14 +228,14 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "12070dcea43e950e",
+  "active": "e9e430ed22993dbf",
   "lastOpenFiles": [
     "projects/C3/string.h.md",
+    "C/string.h.md",
     "C/check.h.md",
     "C/Указатели.md",
     "C/Типы данных.md",
     "C/Утилиты/make.md",
-    "C/string.h.md",
     "C/stdio.h.md",
     "projects/C2_SimpleBashUtils/grep.md",
     "C/regex.h.md",
