@@ -835,3 +835,12 @@ while (token != NULL) {
   token = strtok(NULL, ",; ");
 }
 ```
+
+
+#### `strerror()`
+
+```c
+char *strerror(int errnum);
+```
+
+Преобразует числовой код ошибки (обычно `errno`) в текстовое сообщение на английском.
