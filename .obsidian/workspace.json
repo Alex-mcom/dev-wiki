@@ -230,10 +230,10 @@
   },
   "active": "e9e430ed22993dbf",
   "lastOpenFiles": [
-    "C/stdio.h.md",
-    "C/string.h.md",
     "projects/C3/string.h.md",
     "C/check.h.md",
+    "C/string.h.md",
+    "C/stdio.h.md",
     "C/Указатели.md",
     "C/Типы данных.md",
     "C/Утилиты/make.md",
