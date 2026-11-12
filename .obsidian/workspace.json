@@ -65,7 +65,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 2
       },
       {
         "id": "d303775a0479071b",
@@ -78,7 +78,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/Управление памятью.md",
+                "file": "C/string.h.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -242,8 +242,9 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "f0f5d02055e92ed0",
+  "active": "e9e430ed22993dbf",
   "lastOpenFiles": [
+    "C/Управление памятью.md",
     "C/string.h.md",
     "C/Типы данных.md",
     "projects/C3/string.h.md",
@@ -271,7 +272,6 @@
     "projects/C2_SimpleBashUtils/cat.md",
     "C/Работа с файлами.md",
     "C/Массивы.md",
-    "C/Алгоритмы/Поиск подстрок/Boyer–Moore–Horspool.md",
     "C/Алгоритмы/Поиск подстрок",
     "projects/C2_SimpleBashUtils",
     "projects",
