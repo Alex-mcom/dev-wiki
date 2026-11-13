@@ -63,9 +63,23 @@
               "icon": "lucide-file",
               "title": "_docker"
             }
+          },
+          {
+            "id": "ad73eaab055cd2fc",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "C/stdio.h.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "stdio.h"
+            }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       },
       {
         "id": "d303775a0479071b",
@@ -78,7 +92,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "_docker.md",
+                "file": "C/stdio.h.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -242,8 +256,9 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "908fec199d96caa3",
+  "active": "ad73eaab055cd2fc",
   "lastOpenFiles": [
+    "_docker.md",
     "C/string.h.md",
     "C/Управление памятью.md",
     "C/Алгоритмы/Поиск подстрок/Boyer–Moore–Horspool.md",
@@ -266,7 +281,6 @@
     "projects/C3/s21_string.md",
     "C/Утилиты/gcc.md",
     "C/Утилиты/lldb.md",
-    "_docker.md",
     "C/Аргументы командной строки.md",
     "projects/C3",
     "C/Сборка программы.md",
