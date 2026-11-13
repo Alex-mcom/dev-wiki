@@ -79,7 +79,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 2
       },
       {
         "id": "d303775a0479071b",
@@ -92,7 +92,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/Алгоритмы/Поиск подстрок/Boyer–Moore–Horspool.md",
+                "file": "C/string.h.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -256,10 +256,10 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "ed83c98c8ae02eae",
+  "active": "e9e430ed22993dbf",
   "lastOpenFiles": [
-    "C/string.h.md",
     "C/Алгоритмы/Поиск подстрок/Boyer–Moore–Horspool.md",
+    "C/string.h.md",
     "C/Управление памятью.md",
     "C/Типы данных.md",
     "projects/C3/string.h.md",
