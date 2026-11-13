@@ -212,4 +212,98 @@ static void WriteNumber(Output *out, const FormatSpec *spec,
 
 После каждого шага сравнивай результат с настоящим `sprintf` в юнит-тестах (Check). Удобно писать тест-функцию, которая вызывает оба варианта с одним форматом и сравнивает и строку, и возвращаемое число.
 
-Если хочешь, могу расписать подробнее любой кусок: например, округление в `%f` или логику `%g`, там больше всего подводных камней.
+
+## Функции 
+
+### Верхний уровень
+
+**`s21_sprintf(char *str, const char *format, ...)`**  
+Публичная функция, единственная в этом блоке без `static`. Делает `va_start`, создаёт `Output` (`begin = cursor = str`), вызывает `ProcessFormat`, ставит `'\0'` в конец, делает `va_end`. Возвращает `cursor - begin`, то есть число записанных символов без `'\0'`.
+
+**`ProcessFormat(Output *out, const char *fmt, va_list *args)`**  
+Главный цикл по строке формата. Обычные символы копирует в буфер. На `%` вызывает `ParseSpec`, а потом `FormatArg`. Ничего не возвращает, результат накапливается в `out`.
+
+### Парсер (заполняет `FormatSpec`, в буфер ничего не пишет)
+
+**`InitSpec()`**  
+Возвращает «чистую» структуру: все флаги 0, `width = -1`, `precision = -1`, длина `kLengthNone`.
+
+**`ParseSpec(const char **fmt, va_list *args)`**  
+Разбирает один спецификатор целиком. Вызывает по порядку `InitSpec`, `ParseFlags`, `ParseWidth`, `ParsePrecision`, `ParseLength`, затем читает символ спецификатора (`d`, `s`, `f` и так далее) в `spec.specifier` и сдвигает `*fmt` за него. Возвращает заполненную `FormatSpec`.
+
+**`ParseFlags(const char **fmt, FormatSpec *spec)`**  
+Пока текущий символ один из `-+ #0`, ставит соответствующее поле в 1 и двигает указатель. Конфликты флагов здесь не разрешает.
+
+**`IsFlag(char c)`**  
+Вспомогательная: возвращает 1, если `c` один из `-`, `+`, пробел, `#`, `0`. Нужна, чтобы условие цикла в `ParseFlags` читалось легко.
+
+**`ParseWidth(const char **fmt, va_list *args, FormatSpec *spec)`**  
+Если дальше цифры, читает число через `ParseNumber` в `spec->width`. Если `*`, берёт `va_arg(*args, int)`; отрицательное значение превращает в флаг `minus` и модуль ширины. Если ничего нет, оставляет `-1`.
+
+**`ParsePrecision(const char **fmt, va_list *args, FormatSpec *spec)`**  
+Работает, только если встретилась `.`. После неё: число, либо `*` (из `va_arg`, отрицательное значит «не задана»), либо ничего, тогда точность 0.
+
+**`ParseNumber(const char **fmt)`**  
+Читает подряд идущие цифры, двигает указатель, возвращает число. Используется для ширины и точности.
+
+**`ParseLength(const char **fmt, FormatSpec *spec)`**  
+Смотрит на `h`, `l`, `L`; записывает в `spec->length` соответствующий `Length` и двигает указатель. Если модификатора нет, остаётся `kLengthNone`.
+
+### Диспетчер и форматтеры
+
+**`FormatArg(Output *out, const FormatSpec *spec, va_list *args)`**  
+Диспетчер: по `spec->specifier` выбирает нужный форматтер и вызывает его. Сама ничего не форматирует.
+
+**`FormatChar(...)`**  
+Берёт `va_arg(*args, int)`, превращает в символ и выводит с учётом ширины и флага `-`. Точность не использует.
+
+**`FormatString(...)`**  
+Берёт `const char *`. При точности обрезает строку до этого числа символов. Затем выводит с выравниванием по ширине. Для `NULL` подставляет текст, который печатает эталонная реализация (`(null)` на glibc).
+
+**`FormatSigned(...)`** (`d`, `i`)  
+Достаёт знаковое значение с учётом `h`/`l` через `GetSignedArg`, отделяет знак от модуля, переводит модуль в цифры через `UnsignedToString`, затем передаёт в `WriteNumber`.
+
+**`FormatUnsigned(...)`** (`u`, `o`, `x`, `X`)  
+То же без знака. Основание (10, 8, 16) и регистр цифр выбирает по спецификатору. Для `#` готовит префикс (`0` или `0x`/`0X`).
+
+**`FormatFloat(...)`** (`f`, затем `e`, `g`)  
+Читает `double` или `long double` (для `L`), обрабатывает знак и `inf`/`nan`, округляет до нужной точности (по умолчанию 6), собирает строку `целая.дробная` и передаёт в `WriteNumber`.
+
+**`FormatPointer(...)`** (`p`)  
+Читает `void *`, превращает в число, выводит как `0x` + hex через `UnsignedToString`.
+
+### Вспомогательные
+
+**`GetSignedArg(const FormatSpec *spec, va_list *args)`**  
+Читает целый аргумент нужного типа (`int` или `long`) и приводит к `short`, если указано `h`. Возвращает `long long` для единообразия.
+
+**`GetSignChar(const FormatSpec *spec, int is_negative)`**  
+Решает, какой знак ставить перед числом: `-` для отрицательных, иначе `+` при флаге `plus`, иначе пробел при флаге `space`, иначе ничего (`'\0'`). Здесь же разрешается конфликт `+` и пробела.
+
+**`UnsignedToString(unsigned long long value, int base, int uppercase, char *buf)`**  
+Записывает цифры числа в буфер (в нужном основании, нужным регистром), возвращает их количество. Общая функция для `d`, `u`, `o`, `x`, `X`, `p`.
+
+**`WriteNumber(Output *out, const FormatSpec *spec, const char *digits, int digit_count, char sign)`**  
+Ядро вывода чисел. Считает нули по точности и пробелы по ширине, учитывает флаги `-` и `0`, затем пишет по порядку: пробелы слева, знак/префикс, нули, цифры, пробелы справа.
+
+**`PutChar(Output *out, char c)`**  
+Записывает один символ в `*out->cursor` и сдвигает `cursor`. Все остальные функции вывода строятся на ней (и, при желании, на `PutRepeated(out, c, count)` для нулей и пробелов).
+
+### Кто кого вызывает
+
+```
+s21_sprintf
+ └─ ProcessFormat
+     ├─ PutChar                      (обычный текст)
+     ├─ ParseSpec
+     │   ├─ InitSpec
+     │   ├─ ParseFlags → IsFlag
+     │   ├─ ParseWidth → ParseNumber
+     │   ├─ ParsePrecision → ParseNumber
+     │   └─ ParseLength
+     └─ FormatArg
+         ├─ FormatChar / FormatString
+         ├─ FormatSigned / FormatUnsigned / FormatFloat / FormatPointer
+         │     └─ GetSignedArg, GetSignChar, UnsignedToString
+         └─ все числовые → WriteNumber → PutChar
+```

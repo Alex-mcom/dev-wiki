@@ -272,9 +272,9 @@
   },
   "active": "86cf4816b2554ade",
   "lastOpenFiles": [
-    "C/stdio.h.md",
-    "projects/C3/sprintf.md",
     "C/stdarg.h.md",
+    "projects/C3/sprintf.md",
+    "C/stdio.h.md",
     "_docker.md",
     "C/string.h.md",
     "C/Управление памятью.md",
