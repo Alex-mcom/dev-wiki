@@ -49,9 +49,23 @@
               "icon": "lucide-file",
               "title": "string.h"
             }
+          },
+          {
+            "id": "908fec199d96caa3",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "_docker.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "_docker"
+            }
           }
         ],
-        "currentTab": 2
+        "currentTab": 3
       },
       {
         "id": "d303775a0479071b",
@@ -64,7 +78,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/string.h.md",
+                "file": "_docker.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -228,13 +242,13 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "e9e430ed22993dbf",
+  "active": "908fec199d96caa3",
   "lastOpenFiles": [
+    "C/string.h.md",
     "C/Управление памятью.md",
     "C/Алгоритмы/Поиск подстрок/Boyer–Moore–Horspool.md",
     "C/stdio.h.md",
     "C/stdlib.h.md",
-    "C/string.h.md",
     "C/Типы данных.md",
     "projects/C3/string.h.md",
     "C/check.h.md",
