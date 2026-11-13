@@ -852,8 +852,8 @@ char *strerror(int errnum);
     - macOS: `Unknown error: 1000`
 - Код 0 тоже имеет сообщение: `Success` на Linux, `Undefined error: 0` на macOS.
 
-|Платформа|`strerror(ERANGE)`|Неизвестный код|
-|---|---|---|
-|glibc (Linux)|`Numerical result out of range`|`Unknown error 777`|
-|macOS|`Result too large`|`Unknown error: 777`|
-|musl (Alpine)|`Result not representable`|`No error information`|
+| Платформа     | `strerror(ERANGE)`              | Неизвестный код        |
+| ------------- | ------------------------------- | ---------------------- |
+| glibc (Linux) | `Numerical result out of range` | `Unknown error 777`    |
+| macOS         | `Result too large`              | `Unknown error: 777`   |
+| musl (Alpine) | `Result not representable`      | `No error information` |
