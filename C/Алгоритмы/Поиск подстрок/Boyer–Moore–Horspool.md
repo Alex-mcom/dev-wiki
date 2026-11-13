@@ -141,6 +141,8 @@ int build_shift(size_t shift[], const char findstr[]) {
     shift[i] = m;
   }
 
+  // "zello"
+  // "hello"
   for (size_t i = 0; i < m - 1; i++) {
     shift[(unsigned char)findstr[i]] = m - i - 1;
   }
