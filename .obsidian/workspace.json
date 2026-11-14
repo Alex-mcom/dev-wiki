@@ -65,7 +65,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 2
       },
       {
         "id": "d303775a0479071b",
@@ -78,7 +78,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/Утилиты/make.md",
+                "file": "C/check.h.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -242,8 +242,9 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "0a5caa05a11b4227",
+  "active": "01a85d33ebf2860d",
   "lastOpenFiles": [
+    "C/Утилиты/make.md",
     "C/check.h.md",
     "projects/C3/sprintf.md",
     "C/stdio.h.md",
@@ -258,7 +259,6 @@
     "C/stdlib.h.md",
     "C/Типы данных.md",
     "C/Указатели.md",
-    "C/Утилиты/make.md",
     "projects/C2_SimpleBashUtils/grep.md",
     "C/regex.h.md",
     "C/Утилиты/gcov.md",
