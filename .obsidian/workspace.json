@@ -36,7 +36,8 @@
               "title": "sprintf"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       },
       {
         "id": "d303775a0479071b",
@@ -49,7 +50,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/stdio.h.md",
+                "file": "projects/C3/sprintf.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -213,11 +214,11 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "ad73eaab055cd2fc",
+  "active": "86cf4816b2554ade",
   "lastOpenFiles": [
+    "C/stdio.h.md",
     "projects/C3/sprintf.md",
     "C/check.h.md",
-    "C/stdio.h.md",
     "C/string.h.md",
     "projects/C3/string.h.md",
     "C/stdarg.h.md",
