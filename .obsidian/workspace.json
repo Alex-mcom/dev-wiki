@@ -93,7 +93,7 @@
             }
           }
         ],
-        "currentTab": 5
+        "currentTab": 4
       },
       {
         "id": "d303775a0479071b",
@@ -106,7 +106,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "projects/C3/sprintf.md",
+                "file": "C/stdarg.h.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -270,12 +270,12 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "86cf4816b2554ade",
+  "active": "160c5937852ac571",
   "lastOpenFiles": [
+    "projects/C3/sprintf.md",
     "C/stdarg.h.md",
     "C/Работа с файлами.md",
     "C/stdio.h.md",
-    "projects/C3/sprintf.md",
     "_docker.md",
     "C/string.h.md",
     "C/Управление памятью.md",
