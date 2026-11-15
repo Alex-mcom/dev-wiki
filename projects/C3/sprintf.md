@@ -177,8 +177,6 @@ static void FormatSigned(Output *out, const FormatSpec *spec, va_list *args) {
 | `%`                     | диспетчер `FormatArg` | форматтер не нужен: просто записать `%`                                                                           |
 | `n`                     | диспетчер `FormatArg` | ничего не печатает: записывает число уже выведенных символов по `int *` (с `h` это `short *`, с `l` это `long *`) |
 
-`FormatArg` в таком виде остаётся «чистым» диспетчером, но `%` и `n` придётся обработать прямо в нём (или вынести в `FormatPercent` и `FormatCount`).
-
 
 ### Таблица спецификаторов
 
