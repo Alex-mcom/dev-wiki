@@ -355,13 +355,22 @@ static void WriteNumber(Output *out, const FormatSpec *spec,
 ### Вспомогательные
 
 **`GetSignedArg(const FormatSpec *spec, va_list *args)`**  
-Читает целый аргумент нужного типа (`int` или `long`) и приводит к `short`, если указано `h`. Возвращает `long long` для единообразия.
+Читает целый аргумент нужного типа (`int` или `long`) и приводит к `short`, если указано `h`. Возвращает `long long` для единообразия. (`d`, `i`)
+
+**`GetUnsignedArg(const FormatSpec *spec, va_list *args)`**  
+Читает `unsigned int` или `unsigned long` (по модификатору `l`), при `h` приводит к `unsigned short`. Возвращает `unsigned long long`. (`u`, `o`, `x`, `X`)
+
+**`GetFloatArg(const FormatSpec *spec, va_list *args)`**  
+Читает `double`, а при модификаторе `L` читает `long double`. Возвращает `long double` для единообразия. Важно: `float` в `va_arg` не читается, он при передаче в вариадическую функцию автоматически расширяется до `double`.
 
 **`GetSignChar(const FormatSpec *spec, int is_negative)`**  
 Решает, какой знак ставить перед числом: `-` для отрицательных, иначе `+` при флаге `plus`, иначе пробел при флаге `space`, иначе ничего (`'\0'`). Здесь же разрешается конфликт `+` и пробела.
 
 **`UnsignedToString(unsigned long long value, int base, int uppercase, char *buf)`**  
 Записывает цифры числа в буфер (в нужном основании, нужным регистром), возвращает их количество. Общая функция для `d`, `u`, `o`, `x`, `X`, `p`.
+
+**`FloatToString(long double value, const FormatSpec *spec, char *buf)`** 
+Раскладывает число на целую и дробную часть, округляет по точности (по умолчанию 6 знаков) и пишет цифры в буфер;
 
 **`WriteNumber(Output *out, const FormatSpec *spec, const char *digits, int digit_count, char sign)`**  
 Ядро вывода чисел. Считает нули по точности и пробелы по ширине, учитывает флаги `-` и `0`, затем пишет по порядку: пробелы слева, знак/префикс, нули, цифры, пробелы справа.
