@@ -51,7 +51,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       },
       {
         "id": "d303775a0479071b",
@@ -64,7 +64,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/Типы данных.md",
+                "file": "projects/C3/sprintf.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -228,10 +228,11 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "1f52f79488bd3c83",
+  "active": "86cf4816b2554ade",
   "lastOpenFiles": [
-    "projects/C3/sprintf.md",
     "C/stdio.h.md",
+    "C/Типы данных.md",
+    "projects/C3/sprintf.md",
     "C/Операции и операторы.md",
     "C/stdarg.h.md",
     "C/check.h.md",
@@ -246,7 +247,6 @@
     "C/Управление памятью.md",
     "C/Алгоритмы/Поиск подстрок/Boyer–Moore–Horspool.md",
     "C/stdlib.h.md",
-    "C/Типы данных.md",
     "C/Указатели.md",
     "projects/C2_SimpleBashUtils/grep.md",
     "C/regex.h.md",
