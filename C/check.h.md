@@ -655,6 +655,25 @@ for (int i = 0; i < n; i++) {
 Тут `ck_assert_uint_eq` показал бы только числа, а не то, на какой строке из набора сломалось.
 
 
+#### Макрос для подробного вывода
+
+```c
+#define CHECK(fmt, ...)                                           \
+  do {                                                            \
+    char buf_1[BUF] = {0};                                        \
+    char buf_2[BUF] = {0};                                        \
+    int ret_1 = s21_sprintf(buf_1, fmt, ##__VA_ARGS__);           \
+    int ret_2 = sprintf(buf_2, fmt, ##__VA_ARGS__);               \
+    ck_assert_msg(ret_1 == ret_2,                                 \
+                  "\nmismatch: s21=%d std=%d\n"                   \
+                  "  fmt=\"%s\"\n"                                \
+                  "  args=[%s]\n"                                 \
+                  "  s21=[%s]\n  std=[%s]\n",                     \
+                  ret_1, ret_2, fmt, #__VA_ARGS__, buf_1, buf_2); \
+  } while (0)
+```
+
+
 ### Целые числа
 
 Шаблон: `ck_assert_<тип>_<операция>(X, Y)`.
