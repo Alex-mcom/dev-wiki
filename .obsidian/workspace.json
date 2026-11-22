@@ -57,7 +57,7 @@
               "type": "markdown",
               "state": {
                 "file": "file:/Users/alexy/Documents/c/c_wf/D01_Linux_ID_356272-1/src/report.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
@@ -78,7 +78,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "file:/Users/alexy/Documents/c/c_wf/D01_Linux_ID_356272-1/src/report.md",
+                "file": "Pasted image 20261122231007.png",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -242,10 +242,11 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "b49ecfd167393753",
+  "active": "0abdcbecc5005c24",
   "lastOpenFiles": [
-    "Pasted image 20261122231007.png",
+    "Linux",
     "file:/Users/alexy/Documents/c/c_wf/D01_Linux_ID_356272-1/src/report.md",
+    "Pasted image 20261122231007.png",
     "projects/C3/sprintf.md",
     "C/Сборка программы.md",
     "C/check.h.md",
