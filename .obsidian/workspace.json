@@ -242,10 +242,11 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "f1f846b640d8b9c7",
+  "active": "b49ecfd167393753",
   "lastOpenFiles": [
-    "projects/C3/sprintf.md",
+    "Pasted image 20261122231007.png",
     "file:/Users/alexy/Documents/c/c_wf/D01_Linux_ID_356272-1/src/report.md",
+    "projects/C3/sprintf.md",
     "C/Сборка программы.md",
     "C/check.h.md",
     "C/Типы данных.md",
@@ -269,7 +270,6 @@
     "Методология.md",
     "_cat.md",
     "_Структурный подход.md",
-    "_Рефакторинг s21_grep.md",
     "projects/C3",
     "C/Утилиты",
     "C/Алгоритмы/Поиск подстрок",
@@ -289,7 +289,6 @@
     "Снимок экрана 2026-09-22 в 16.53.28.png",
     "C/imgs/Pasted image 20260921193509.png",
     "C/imgs/Снимок экрана 2026-09-19 в 14.03.03.png",
-    "Без названия.canvas",
-    "C/imgs/Pasted image 20260918211536.png"
+    "Без названия.canvas"
   ]
 }
