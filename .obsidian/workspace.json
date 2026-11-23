@@ -79,7 +79,7 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 3
       },
       {
         "id": "d303775a0479071b",
@@ -92,7 +92,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Linux/systemd.md",
+                "file": "Linux/Настройка сети.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -256,11 +256,11 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "e0a4ef33263f8394",
+  "active": "655be2eb1d1569e8",
   "lastOpenFiles": [
+    "C/IEEE 754.md",
     "Linux/Настройка сети.md",
     "Linux/systemd.md",
-    "C/IEEE 754.md",
     "projects/C3/sprintf.md",
     "_docker.md",
     "file:/Users/alexy/Documents/c/c_wf/D01_Linux_ID_356272-1/src/report.md",
