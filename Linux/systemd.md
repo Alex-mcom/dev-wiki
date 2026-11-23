@@ -162,3 +162,31 @@ timedatectl                                # проверить
 
 ## `networkctl`
 
+`networkctl` — утилита управления и диагностики сети для **systemd-networkd**, службы, которая в Ubuntu Server реально настраивает интерфейсы. Netplan только читает YAML-файлы и генерирует из них конфигурацию для networkd, а `networkctl` показывает, что получилось в итоге.
+
+```bash
+networkctl                       # список интерфейсов (то же, что networkctl list)
+networkctl status                # общий статус сети
+networkctl status enp0s3         # подробности по интерфейсу
+sudo networkctl renew enp0s3     # обновить аренду DHCP
+sudo networkctl reconfigure enp0s3   # заново применить настройки интерфейса
+sudo networkctl reload           # перечитать конфиги
+```
+
+Пример `networkctl list`:
+
+```
+IDX LINK   TYPE     OPERATIONAL SETUP
+  1 lo     loopback carrier     unmanaged
+  2 enp0s3 ether    routable    configured
+```
+
+- **OPERATIONAL** — состояние линка: `routable` (есть адрес и маршрут), `carrier` (кабель подключён, адреса нет), `off` (интерфейс выключен).
+- **SETUP** — статус управления: `configured` (настроен networkd), `configuring` (идёт настройка), `unmanaged` (networkd интерфейс не трогает, как с `lo`).
+
+Пример `networkctl status enp0s3` показывает сразу несколько нужных для отчёта данных: адрес, шлюз, DNS и источник настройки (DHCP или статика).
+
+Что важно помнить:
+
+- `renew` имеет смысл только при включённом DHCP (`dhcp4: true`). При статической настройке обновлять нечего.
+- Для изменяющих команд нужен `sudo`.
