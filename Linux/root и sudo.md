@@ -47,7 +47,7 @@ root, поэтому любая ошибка или вредоносная ко�
 ```bash
 sudo usermod -aG sudo patrik
 
-sudo adduser username sudo # так тоже можно
+sudo adduser username sudo  # так тоже можно
 ```
 
 Полезные варианты:
