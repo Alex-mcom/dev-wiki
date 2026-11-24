@@ -44,12 +44,18 @@ root, поэтому любая ошибка или вредоносная ко�
 
 Выдать право sudo пользователю:
 
-    sudo usermod -aG sudo patrik
+```bash
+sudo usermod -aG sudo patrik
+
+sudo adduser username sudo # так тоже можно
+```
 
 Полезные варианты:
 
-    sudo -i       # shell root (с загрузкой окружения root)
-    sudo -u user cmd   # выполнить от имени другого пользователя
+```bash
+sudo -i       # shell root (с загрузкой окружения root)
+sudo -u user cmd   # выполнить от имени другого пользователя
+```
 
 
 ## VPS и вход под root
