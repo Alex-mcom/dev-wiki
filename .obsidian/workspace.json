@@ -78,7 +78,8 @@
               "title": "Управление памятью"
             }
           }
-        ]
+        ],
+        "currentTab": 4
       },
       {
         "id": "d303775a0479071b",
@@ -91,7 +92,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C/stdio.h.md",
+                "file": "C/Управление памятью.md",
                 "followCursor": false,
                 "showSearch": true,
                 "searchQuery": ""
@@ -255,11 +256,11 @@
       "github-sync:Sync with Remote": false
     }
   },
-  "active": "ad73eaab055cd2fc",
+  "active": "41ae81a18fe59093",
   "lastOpenFiles": [
+    "C/stdio.h.md",
     "C/Управление памятью.md",
     "C/string.h.md",
-    "C/stdio.h.md",
     "projects/C3/sprintf.md",
     "Linux/Базовое настройки Linux.md",
     "Linux/systemd.md",
