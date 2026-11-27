@@ -118,11 +118,11 @@ static const TTest* g_tests[MAX_TESTS];
 #define TEST() TEST_I(__COUNTER__)
 #define TEST_I(n) TEST_II(n)
 #define TEST_II(n)                                         \
-  static const TTest* sprintf_##n;                         \
+  static const TTest* fn_##n;                              \
   __attribute__((constructor)) static void reg_##n(void) { \
-    g_tests[n] = sprintf_##n;                              \
+    g_tests[n] = fn_##n;                                   \
   }                                                        \
-  START_TEST(sprintf_##n)
+  START_TEST(fn_##n)
 ```
 
 Использование:
